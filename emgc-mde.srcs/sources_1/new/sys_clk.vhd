@@ -32,12 +32,13 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity sys_clk is
---  Port ( );
+    Port ( enable : in STD_LOGIC;
+           clk : out STD_LOGIC);
 end sys_clk;
 
 architecture Behavioral of sys_clk is
-
+-- Signal declarations (wires)
 begin
-
+-- Functional VHDL code (logic)
 
 end Behavioral;

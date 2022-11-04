@@ -32,14 +32,15 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity pi_output is
-    Port ( p_input : in STD_LOGIC;
-           i_input : in STD_LOGIC;
-           output : out STD_LOGIC);
+    Port ( clk : in STD_LOGIC;
+           p_input : in STD_LOGIC_VECTOR(7 downto 0);
+           i_input : in STD_LOGIC_VECTOR(7 downto 0);
+           output : out STD_LOGIC_VECTOR(7 downto 0));
 end pi_output;
 
 architecture Behavioral of pi_output is
-
+-- Signal declarations (wires)
 begin
-
+-- Functional VHDL code (logic)
 
 end Behavioral;

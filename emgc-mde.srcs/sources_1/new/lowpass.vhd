@@ -32,13 +32,14 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity lowpass is
-    Port ( input : in STD_LOGIC;
-           output : out STD_LOGIC);
+    Port ( clk : in STD_LOGIC;
+           input : in STD_LOGIC_VECTOR(7 downto 0);
+           output : out STD_LOGIC_VECTOR(7 downto 0));
 end lowpass;
 
 architecture Behavioral of lowpass is
-
+-- Signal declarations (wires)
 begin
-
+-- Functional VHDL code (logic)
 
 end Behavioral;
