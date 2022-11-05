@@ -10,7 +10,7 @@
 -- Tool Versions: Vivado v2022.2 (64-bit)
 -- Description: 
 -- 
--- Dependencies: 
+-- Dependencies: spi_master.vhd
 -- 
 -- Revision:
 -- Revision 0.01 - File Created
@@ -28,11 +28,12 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity dac_interface is
     Port ( clk : in STD_LOGIC;
+           sclk : in STD_LOGIC;
            data : in STD_LOGIC_VECTOR(15 downto 0);
-           cs : out STD_LOGIC;
-           din : out STD_LOGIC;
-           ldac : out STD_LOGIC;
-           sclk : out STD_LOGIC ); 
+           cs_out : out STD_LOGIC;
+           din_out : out STD_LOGIC;
+           ldac_out : out STD_LOGIC;
+           sclk_out : out STD_LOGIC ); 
 end dac_interface;
 
 architecture Behavioral of dac_interface is

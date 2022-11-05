@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
 -- Company: 
--- Engineer: 
+-- Engineer: Kavin Thirukonda
 -- 
 -- Create Date: 11/04/2022 11:20:53 PM
 -- Design Name: 
@@ -10,10 +10,11 @@
 -- Tool Versions: 
 -- Description: 
 -- 
--- Dependencies: 
+-- Dependencies: pi_controller.vhd, 
+--               dac_interface.vhd, 
+--               rs422_interface.vhd, 
+--               sys_clk.vhd
 -- 
--- Revision:
--- Revision 0.01 - File Created
 -- Additional Comments:
 -- 
 ----------------------------------------------------------------------------------
@@ -22,17 +23,9 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
-
--- Uncomment the following library declaration if instantiating
--- any Xilinx leaf cells in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
-
 entity mac_toplevel is
---  Port ( );
+--  Port ( ); 
+-- 4 output ports to DAC pmod pins, X input ports for RS422 pmod pins (defined in fpga datasheet)
 end mac_toplevel;
 
 architecture Behavioral of mac_toplevel is

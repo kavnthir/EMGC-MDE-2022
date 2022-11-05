@@ -33,7 +33,8 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity sys_clk is
     Port ( enable : in STD_LOGIC;
-           clk : out STD_LOGIC);
+           clk : out STD_LOGIC; -- main sys_clk
+           sclk : out STD_LOGIC); -- serial clock
 end sys_clk;
 
 architecture Behavioral of sys_clk is
