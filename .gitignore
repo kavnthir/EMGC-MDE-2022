@@ -35,6 +35,7 @@
 .Xil
 *.sdk
 *.hw
+*.sim
 *.ip_user_files
 
 ### IP synth
