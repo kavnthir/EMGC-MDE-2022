@@ -33,17 +33,13 @@ begin
         if (counter = "0000") then
             of_detect <= '0';
         end if;
-
         if (rst = '1') then 
             counter <=  "0000";
         elsif (clk'event and clk = '1') then
-
             if (counter = "1111") then
                 of_detect <= '1';
             end if;
-
             counter <= counter + '1';
-
         end if;
     end process;
     count <= counter;
