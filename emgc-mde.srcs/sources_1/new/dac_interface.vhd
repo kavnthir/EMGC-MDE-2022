@@ -29,7 +29,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity dac_interface is
     Port ( clk : in STD_LOGIC;
            sclk : in STD_LOGIC;
-           data : in STD_LOGIC_VECTOR(15 downto 0);
+           x_data, y_data : in STD_LOGIC_VECTOR(15 downto 0);
            cs_out : out STD_LOGIC;
            din_out : out STD_LOGIC;
            ldac_out : out STD_LOGIC;

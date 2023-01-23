@@ -2,9 +2,9 @@
 -- Company: 
 -- Engineer: 
 -- 
--- Create Date: 11/07/2022 07:09:54 PM
+-- Create Date: 01/17/2023 05:05:43 PM
 -- Design Name: 
--- Module Name: lowpass_tb - Behavioral
+-- Module Name: pi_controller_tb - Behavioral
 -- Project Name: 
 -- Target Devices: 
 -- Tool Versions: 
@@ -33,25 +33,28 @@ use STD.ENV.STOP;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity lowpass_tb is
---  Port ( );
-end lowpass_tb;
+entity pi_controller_tb is
+end pi_controller_tb;
 
-architecture Behavioral of lowpass_tb is
+architecture Behavioral of pi_controller_tb is
     signal clk, rst : STD_LOGIC := '0';
     signal input : STD_LOGIC_VECTOR(15 downto 0) := (others => '0');
     signal output: STD_LOGIC_VECTOR(15 downto 0);
 begin
 
-    UUT : entity work.lowpass port map (clk => clk,
-                                        input => input,
-                                        output => output);
+    UUT : entity work.pi_pmodule port map (clk => clk,
+                                           input => input,
+                                           output => output);
     -- Clock signal: 20ns period
     clk <= not clk after 10 ns;
     
     stimulus : process begin
         wait for 5 ns;
-        input <= STD_LOGIC_VECTOR(TO_SIGNED(15, input'length));
+        input <= STD_LOGIC_VECTOR(TO_SIGNED(1, input'length));
+        wait for 20 ns;
+        input <= STD_LOGIC_VECTOR(TO_SIGNED(2, input'length));
+        wait for 20 ns;
+        input <= STD_LOGIC_VECTOR(TO_SIGNED(-3, input'length));
         wait for 20 ns;
         input <= STD_LOGIC_VECTOR(TO_SIGNED(0, input'length));
         wait for 20 ns;

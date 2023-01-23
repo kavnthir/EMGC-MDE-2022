@@ -2,9 +2,9 @@
 -- Company: 
 -- Engineer: 
 -- 
--- Create Date: 11/04/2022 11:23:19 PM
+-- Create Date: 01/23/2023 01:47:48 PM
 -- Design Name: 
--- Module Name: rs422_interface - Behavioral
+-- Module Name: gpio_interface - Behavioral
 -- Project Name: 
 -- Target Devices: 
 -- Tool Versions: 
@@ -31,12 +31,13 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity rs422_interface is
-    Port ( clk, en : in STD_LOGIC;
-           x_data, y_data : out STD_LOGIC_VECTOR(15 downto 0));
-end rs422_interface;
+entity gpio_interface is
+    Port ( clk : in STD_LOGIC;
+           mast_extend : in STD_LOGIC;
+           master_enable, mast_limit : out STD_LOGIC );
+end gpio_interface;
 
-architecture Behavioral of rs422_interface is
+architecture Behavioral of gpio_interface is
 
 begin
 

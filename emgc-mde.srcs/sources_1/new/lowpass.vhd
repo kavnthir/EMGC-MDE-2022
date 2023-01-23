@@ -34,8 +34,10 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity lowpass is
     Port ( clk : in STD_LOGIC;
-           input : in STD_LOGIC_VECTOR(7 downto 0);
-           output : out STD_LOGIC_VECTOR(7 downto 0));
+           en : in STD_LOGIC;
+           rst : in STD_LOGIC;
+           input : in STD_LOGIC_VECTOR(15 downto 0);
+           output : out STD_LOGIC_VECTOR(15 downto 0));
 end lowpass;
 
 architecture Behavioral of lowpass is
@@ -43,13 +45,22 @@ architecture Behavioral of lowpass is
     constant K1 : integer := 3;
     constant K2 : integer := 3;
     constant denom : integer := 16;
-    signal int_input, int_prev, int_output: integer;
+    signal int_input, int_output : integer;
+    signal int_prev : integer := 0;
     
 begin
 -- Functional VHDL code (logic)
-    int_input <= TO_INTEGER(unsigned(input));
-    int_prev <= int_input;
-    int_output <= ((K1 * int_input) + (K2 * int_prev)) / denom;
-    output <= STD_LOGIC_VECTOR(TO_UNSIGNED(int_output, output'length));
+    int_input <= TO_INTEGER(SIGNED(input));
+    
+    process(clk) begin
+        if (rst = '1') then
+            int_output <= 0;
+        elsif (clk'event and clk = '1') then
+            int_output <= ((K1 * int_input) + (K2 * int_prev)) / denom;
+            int_prev <= int_input;
+        end if;
+    end process; 
+
+    output <= STD_LOGIC_VECTOR(TO_SIGNED(int_output, output'length));
 
 end Behavioral;

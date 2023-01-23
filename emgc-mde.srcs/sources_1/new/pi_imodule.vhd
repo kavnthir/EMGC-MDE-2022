@@ -34,6 +34,7 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity pi_imodule is
     Port ( clk : in STD_LOGIC;
+           rst : in STD_LOGIC;
            input : in STD_LOGIC_VECTOR(15 downto 0);
            output : out STD_LOGIC_VECTOR(15 downto 0));
 end pi_imodule;
@@ -46,8 +47,16 @@ architecture Behavioral of pi_imodule is
 begin
 -- Functional VHDL code (logic)
     int_input <= TO_INTEGER(unsigned(input));
-    integral <= integral + int_input;
-    int_output <= integral * Ki;
+    
+    process(clk, rst) begin
+        if (rst = '1') then
+            int_output <= 0;
+        elsif (clk'event and clk = '1') then
+            integral <= integral + int_input;
+            int_output <= integral * Ki;
+        end if;
+    end process; 
+    
     output <= STD_LOGIC_VECTOR(TO_UNSIGNED(int_output, output'length));
 
 end Behavioral;

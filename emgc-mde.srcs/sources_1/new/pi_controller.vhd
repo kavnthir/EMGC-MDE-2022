@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
 -- Company: 
--- Engineer: Kavin Thirukonda
+-- Engineer: Kaden Marlin, Kavin Thirukonda
 -- 
 -- Create Date: 11/04/2022 11:14:57 PM
 -- Design Name: 
@@ -23,7 +23,9 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
 entity pi_controller is
-    Port ( clk : in STD_LOGIC; 
+    Port ( clk : in STD_LOGIC;
+           en : in STD_LOGIC;
+           rst : in STD_LOGIC;
            input : in STD_LOGIC_VECTOR(15 downto 0);
            output : out STD_LOGIC_VECTOR(15 downto 0)); -- DAC takes 16 bits of input
 end pi_controller;
@@ -33,14 +35,17 @@ architecture Behavioral of pi_controller is
 begin
 
     pmodule : entity work.pi_pmodule port map (clk => clk,
+                                               rst => rst,
                                                input => input,
                                                output => p_wire);
                                                
     imodule : entity work.pi_imodule port map (clk => clk,
+                                               rst => rst,
                                                input => input,
                                                output => i_wire);
                                                
     omodule : entity work.pi_output port map (clk => clk,
+                                              rst => rst,
                                               p_input => p_wire,
                                               i_input => i_wire,
                                               output => output);

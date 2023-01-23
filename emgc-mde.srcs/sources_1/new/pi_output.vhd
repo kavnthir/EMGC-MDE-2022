@@ -34,6 +34,7 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity pi_output is
     Port ( clk : in STD_LOGIC;
+           rst : in STD_LOGIC;
            p_input : in STD_LOGIC_VECTOR(15 downto 0);
            i_input : in STD_LOGIC_VECTOR(15 downto 0);
            output : out STD_LOGIC_VECTOR(15 downto 0));
@@ -49,7 +50,15 @@ begin
 -- !!! Should renormalize +/-15dgr to +/-5V
     int_pinput <= TO_INTEGER(unsigned(p_input));
     int_iinput <= TO_INTEGER(unsigned(i_input));
-    int_output <= (int_pinput / denom) + (int_iinput / denom);
+    
+    process(clk, rst) begin
+        if (rst = '1') then
+            int_output <= 0;
+        elsif (clk'event and clk = '1') then
+            int_output <= (int_pinput / denom) + (int_iinput / denom);
+        end if;
+    end process; 
+    
     output <= STD_LOGIC_VECTOR(TO_UNSIGNED(int_output, output'length));
 
 end Behavioral;

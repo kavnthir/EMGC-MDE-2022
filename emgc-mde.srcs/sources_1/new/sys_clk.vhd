@@ -40,7 +40,10 @@ end sys_clk;
 
 architecture Behavioral of sys_clk is
 -- Signal declarations (wires)
+    signal sysclk : STD_LOGIC := '0';
 begin
 -- Functional VHDL code (logic)
-
+    sysclk <= not sysclk after 10 ns;
+    clk <= sysclk;
+    
 end Behavioral;

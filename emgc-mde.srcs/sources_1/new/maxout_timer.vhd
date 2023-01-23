@@ -2,9 +2,9 @@
 -- Company: 
 -- Engineer: 
 -- 
--- Create Date: 11/04/2022 11:23:19 PM
+-- Create Date: 01/23/2023 02:57:53 PM
 -- Design Name: 
--- Module Name: rs422_interface - Behavioral
+-- Module Name: maxout_timer - Behavioral
 -- Project Name: 
 -- Target Devices: 
 -- Tool Versions: 
@@ -31,13 +31,17 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity rs422_interface is
-    Port ( clk, en : in STD_LOGIC;
-           x_data, y_data : out STD_LOGIC_VECTOR(15 downto 0));
-end rs422_interface;
+entity maxout_timer is
+    Port ( clk : in STD_LOGIC;
+           en : in STD_LOGIC;
+           rst : in STD_LOGIC;
+           max : out STD_LOGIC);
+end maxout_timer;
 
-architecture Behavioral of rs422_interface is
-
+architecture Behavioral of maxout_timer is
+    -- clock automatically ticks up its value when 
+    -- stops counting andoutputs HIGH on "max" when
+    -- it reaches its maximum value.
 begin
 
 
