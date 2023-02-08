@@ -60,13 +60,13 @@ begin
     -- !!! maybe fix this by doing actual bit shift and compare instead of relying on integers
     process(clk) begin
         if (clk'event and clk = '1') then
-            if (int_x_channel < 8) then
+            if (int_x_channel < 8 and int_x_channel > -8) then
                 x_comp_wire <= '1';
             else
                 x_comp_wire <= '0';
             end if;
             
-            if (int_y_channel < 8) then
+            if (int_y_channel < 8 and int_y_channel > -8) then
                 y_comp_wire <= '1';
             else
                 y_comp_wire <= '0';
