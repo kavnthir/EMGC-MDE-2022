@@ -33,9 +33,10 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity sys_clk is
     Port ( enable : in STD_LOGIC;
-           clk : out STD_LOGIC; -- main sys_clk
-           sclk : out STD_LOGIC; -- serial clock
-           uclk : out STD_LOGIC); -- uart clock
+           clk : out STD_LOGIC; -- main sys_clk 100 Hz
+           sclk : out STD_LOGIC; -- serial clock (DAC)
+           uclk : out STD_LOGIC); -- uart clock (rs422)
+           -- need another fast clock for the mac_controller
 end sys_clk;
 
 architecture Behavioral of sys_clk is

@@ -53,7 +53,7 @@ begin
     process (clk, rst) begin
         if (rst = '1') then
             count <= (others => '0');
-        elsif (rising_edge(clk) and en = '1') then
+        elsif (RISING_EDGE(clk) and en = '1') then
             if (count /= 2**bitsize-1) then
                 count <= count + 1;
             end if;
