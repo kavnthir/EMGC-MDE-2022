@@ -36,6 +36,7 @@ use IEEE.NUMERIC_STD.ALL;
 --use UNISIM.VComponents.all;
 
 entity mac_controller is
+    Generic ( bit_precision : integer := 3);
     Port ( clk : in STD_LOGIC; -- Fast clock to run timer
            master_enable: in STD_LOGIC; -- enable input from GPIO
            mast_limit : in STD_LOGIC; -- mast limit switch input from GPIO
@@ -46,33 +47,40 @@ entity mac_controller is
 end mac_controller;
 
 architecture Behavioral of mac_controller is
+    constant comp_val : integer := 2**bit_precision; 
     signal int_x_channel, int_y_channel : integer;
     signal x_comp_wire, y_comp_wire : STD_LOGIC := '0';
     signal timer_enable, timer_reset, timer_max : STD_LOGIC := '0';
 begin
+
+    -- concurrent assign to signed integer
     int_x_channel <= TO_INTEGER(SIGNED(x_channel));
     int_y_channel <= TO_INTEGER(SIGNED(y_channel));
 
-    -- comparators:
+    -- synchronus comparators:
     -- x_comp_wire and y_comp_wire are '1' when
-    -- the corresponding input is < 0.5 degrees (fixed point)
+    -- the corresponding input is < 0.5 degrees (0b'7 in fixed point)
     
     -- !!! maybe fix this by doing actual bit shift and compare instead of relying on integers
-    process(clk) begin
-        if (clk'event and clk = '1') then
-            if (int_x_channel < 8 and int_x_channel > -8) then
+    x_scomparator : process (clk) begin
+        if (RISING_EDGE(clk)) then
+            if (int_x_channel < comp_val and int_x_channel > -comp_val) then
                 x_comp_wire <= '1';
             else
                 x_comp_wire <= '0';
             end if;
-            
-            if (int_y_channel < 8 and int_y_channel > -8) then
+        end if;
+    end process;        
+    
+    y_scomparator : process (clk) begin
+        if (RISING_EDGE(clk)) then
+            if (int_y_channel < comp_val and int_y_channel > -comp_val) then
                 y_comp_wire <= '1';
             else
                 y_comp_wire <= '0';
             end if;
         end if;
-    end process;        
+    end process;
     
     -- control for timer starting/resetting
     -- always reset the timer to zero when comparison is false

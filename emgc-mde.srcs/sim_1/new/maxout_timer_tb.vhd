@@ -51,14 +51,15 @@ begin
     clk <= not clk after 1 ns;
     
     stimulus : process begin
-        -- asynchronus reset
-        wait for 1.5 ns;
+        -- synchronus reset
+        wait for 0.5 ns;
         rst <= '1', '0' after 1 ns;
-        wait for 1.5 ns;
         assert max = '0' report "reset failure" severity failure;
         
         -- two full loops
-        en <= '1' after 2 ns;
+        wait until clk = '1';
+        wait for 1.5 ns;
+        en <= '1';
         
         wait until max = '1';
         assert max = '1' report "max was not set" severity failure;
@@ -66,8 +67,8 @@ begin
         assert max = '1' report "max did not stay set" severity failure;
         wait for 10 ns;
         
-        rst <= '1', '0' after 1 ns;
-        wait for 1 ns;
+        rst <= '1', '0' after 3 ns;
+        wait for 3 ns;
         assert max = '0' report "reset failure" severity failure;
         
         wait until max = '1';
@@ -77,8 +78,8 @@ begin
         wait for 10 ns;
         
         -- loops with reset in the middle
-        rst <= '1', '0' after 1 ns;
-        wait for 1 ns;
+        rst <= '1', '0' after 3 ns;
+        wait for 3 ns;
         assert max = '0' report "reset failure" severity failure;
         
         wait for 100 ns;
@@ -91,8 +92,8 @@ begin
         wait for 10 ns;
         assert max = '0' report "max should not be reached after only 200ns" severity warning;
         
-        rst <= '1', '0' after 1 ns;
-        wait for 1 ns;
+        rst <= '1', '0' after 3 ns;
+        wait for 3 ns;
         assert max = '0' report "reset failure" severity failure;
         
         en <= '1';
@@ -116,9 +117,32 @@ begin
         rst <= '1';
         wait for 10 ns;
         -- on
+        en <= '1';
+        rst <= '0';
+        wait for 10 ns;
+        
+        -- single period
+        -- off
+        wait until clk = '1';
         en <= '0';
         rst <= '1';
-        wait for 10 ns;
+        wait for 2 ns;
+        -- on
+        en <= '1';
+        rst <= '0';
+        wait for 2 ns;
+        -- off
+        en <= '0';
+        rst <= '1';
+        wait for 2 ns;
+        -- on
+        en <= '1';
+        rst <= '0';
+        wait for 2 ns;
+        -- off
+        en <= '0';
+        rst <= '1';
+        wait for 2 ns;
         
         STOP;
     end process; 
