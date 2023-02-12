@@ -2,16 +2,23 @@
 Tf = 5; %total seconds
 Fs = 100; %sample frequency Hz
 t = 0:(Tf*Fs);
+Ai
+
+% base function
 At = 10 .* exp(-t / Fs);
 
+%
+
+% plot
 figure;
 stem(t, At);
 
 At_int16 = int16(floor(16 * At)); % convert to fixed point
-At_bin16 = dec2bin(At_int16); %show binary list
+At_bin16 = dec2bin(At_int16, 16); %show binary list
 
+% print the waveform to fixed point binary
 fileID = fopen('testwave.txt','w');
 for i = 1:(Tf*Fs+1)
-    fprintf(fileID, strcat(At_bin16(i,:), ));
+    fprintf(fileID, strcat(At_bin16(i,:), '\n'));
 end
 fclose(fileID);
