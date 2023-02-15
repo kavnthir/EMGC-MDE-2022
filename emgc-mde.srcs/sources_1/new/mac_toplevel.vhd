@@ -35,6 +35,7 @@ architecture Behavioral of mac_toplevel is
     signal sys_enable, sys_reset : STD_LOGIC; -- control signals from control logic
     signal x_input_wire, x_lpf_wire, x_output_wire : STD_LOGIC_VECTOR(15 downto 0); 
     signal y_input_wire, y_lpf_wire, y_output_wire : STD_LOGIC_VECTOR(15 downto 0);
+    signal x_sign_bit, y_sign_bit : STD_LOGIC; -- sign bits for the analog output
 begin
 
     -- enable for sys_clock and rs422_interface should always be on
@@ -52,7 +53,9 @@ begin
     gpio_in : entity work.gpio_interface port map (clk => clk,
                                                    mast_extend => mast_extend,
                                                    master_enable => master_enable,
-                                                   mast_limit => mast_limit);
+                                                   mast_limit => mast_limit,
+                                                   x_sign_bit => x_sign_bit,
+                                                   y_sign_bit => y_sign_bit);
     
     mac_ctrl : entity work.mac_controller port map (clk => clk,
                                                     master_enable => master_enable,

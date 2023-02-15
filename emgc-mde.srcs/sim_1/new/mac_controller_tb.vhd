@@ -57,7 +57,7 @@ begin
                                                sys_reset => sys_reset,
                                                mast_extend => mast_extend);
     
-    -- clock frequecy of 2 Hz                                         
+    -- clock period of 2 ns                                       
     clk <= not clk after 1 ns;
 
     stimulus : process begin

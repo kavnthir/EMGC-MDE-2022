@@ -27,27 +27,19 @@ entity pi_controller is
            en : in STD_LOGIC;
            rst : in STD_LOGIC;
            input : in STD_LOGIC_VECTOR(15 downto 0);
-           output : out STD_LOGIC_VECTOR(15 downto 0)); -- DAC takes 16 bits of input
+           output : out STD_LOGIC_VECTOR(7 downto 0)); -- DAC takes 8 bits of input
 end pi_controller;
 
 architecture Behavioral of pi_controller is
-    signal p_wire, i_wire : STD_LOGIC_VECTOR(15 downto 0);
+    -- !!! precompile math to solve for constants
+    signal pi_response : STD_LOGIC_VECTOR(15 downto 0);
+    signal pi_memory : STD_LOGIC_VECTOR(15 downto 0);
 begin
 
-    pmodule : entity work.pi_pmodule port map (clk => clk,
-                                               rst => rst,
-                                               input => input,
-                                               output => p_wire);
-                                               
-    imodule : entity work.pi_imodule port map (clk => clk,
-                                               rst => rst,
-                                               input => input,
-                                               output => i_wire);
-                                               
-    omodule : entity work.pi_output port map (clk => clk,
-                                              rst => rst,
-                                              p_input => p_wire,
-                                              i_input => i_wire,
-                                              output => output);
+    pi_response <= pi_memory; -- insert PI equation here as function of previous values
+    
+    -- !!! may want to have multi-stage circuit here
+    
+    output <= input; -- insert output scaling from 16 to 8 bit
 
 end Behavioral;
