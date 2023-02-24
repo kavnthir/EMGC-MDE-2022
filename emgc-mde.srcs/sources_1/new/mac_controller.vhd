@@ -36,7 +36,7 @@ use IEEE.NUMERIC_STD.ALL;
 --use UNISIM.VComponents.all;
 
 entity mac_controller is
-    Generic ( bit_precision : integer := 3);
+    Generic ( bit_precision : integer := 3); -- comparator precision
     Port ( clk : in STD_LOGIC; -- Fast clock to run timer
            master_enable: in STD_LOGIC; -- enable input from GPIO
            mast_limit : in STD_LOGIC; -- mast limit switch input from GPIO

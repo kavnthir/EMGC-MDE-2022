@@ -29,7 +29,7 @@ entity mac_toplevel is
 end mac_toplevel;
 
 architecture Behavioral of mac_toplevel is
-    signal enable : STD_LOGIC := '1'; -- global enable
+    signal enable : STD_LOGIC; -- global enable
     signal master_enable, mast_limit, mast_extend : STD_LOGIC; -- global input output signals
     signal clk, sclk, uclk : STD_LOGIC; -- clock signals
     signal sys_enable, sys_reset : STD_LOGIC; -- control signals from control logic
@@ -38,10 +38,15 @@ architecture Behavioral of mac_toplevel is
     signal x_sign_bit, y_sign_bit : STD_LOGIC; -- sign bits for the analog output
 begin
 
-    -- enable for sys_clock and rs422_interface should always be on
-    -- clock signals need to be reworked.
-    sysclk : entity work.sys_clk port map (enable => enable,
-                                           clk => clk,
+    -- !!! enable from FPGA switch should be debounced/synchronized in gpio_interface
+    -- !!! reset from FPGA button should be debounced/synchronized in gpio_interface
+    -- !!! enable and reset output should go directly into mac_controller
+    -- !!! rising edge of enable should pulse the reset in mac_controller
+    -- !!! all other modules are enabled/reset by sys_enable and sys_reset
+    -- !!! the sys_clk divider module should not have an enable, it should always
+    -- be enabled and top-level should be synchronized to clk_100
+    
+    sysclk : entity work.sys_clk port map (clk => clk,
                                            sclk => sclk,
                                            uclk => uclk);
     

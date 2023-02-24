@@ -21,6 +21,7 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_STD.ALL;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -31,20 +32,50 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
+
+-- !!! THIS MODULE does clock divisions for the various modules 
+
 entity sys_clk is
-    Port ( enable : in STD_LOGIC;
-           clk : out STD_LOGIC; -- main sys_clk 100 Hz
-           sclk : out STD_LOGIC; -- serial clock (DAC)
-           uclk : out STD_LOGIC); -- uart clock (rs422)
-           -- need another fast clock for the mac_controller
+    Generic ( input_Hz : integer := 50_000_000;
+              clk_100_Hz : integer := 100;
+              clk_timer_Hz : integer;
+              clk_RS422_Hz : integer;
+              clk_DAC_Hz : integer);
+    Port ( clk_in : in STD_LOGIC; -- Input FPGA hardware clock
+           reset : in STD_LOGIC; -- reset clock timers
+           clk_100 : out STD_LOGIC; -- main sys_clk 100 Hz
+           clk_timer : out STD_LOGIC; -- MAC stability timer
+           clk_RS422 : out STD_LOGIC; -- RS422 deserializer clock
+           clk_DAC : out STD_LOGIC); -- DAC serializer clock 
 end sys_clk;
 
 architecture Behavioral of sys_clk is
--- Signal declarations (wires)
-    signal sysclk : STD_LOGIC := '0';
+
 begin
--- Functional VHDL code (logic)
-    sysclk <= not sysclk after 10 ns;
-    clk <= sysclk;
+
+    clk_div_100 : entity work.clk_div generic map (in_Hz => input_Hz,
+                                                   out_Hz => clk_100_Hz)
+                                      port map (rst => reset,
+                                                clk_in => clk_in,
+                                                clk_out => clk_100);
     
+    clk_div_timer : entity work.clk_div generic map (in_Hz => input_Hz,
+                                                     out_Hz => clk_timer_Hz)
+                                        port map (rst => reset,
+                                                  clk_in => clk_in,
+                                                  clk_out => clk_timer);
+                                                  
+    clk_div_RS422 : entity work.clk_div generic map (in_Hz => input_Hz,
+                                                     out_Hz => clk_RS422_Hz)
+                                        port map (rst => reset,
+                                                  clk_in => clk_in,
+                                                  clk_out => clk_RS422);
+                                               
+    clk_div_DAC : entity work.clk_div generic map (in_Hz => input_Hz,
+                                                   out_Hz => clk_DAC_Hz)
+                                      port map (rst => reset,
+                                                clk_in => clk_in,
+                                                clk_out => clk_DAC);
+
 end Behavioral;
+    
