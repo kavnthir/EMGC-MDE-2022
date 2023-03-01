@@ -29,9 +29,9 @@ entity mac_toplevel is
 end mac_toplevel;
 
 architecture Behavioral of mac_toplevel is
+    signal clk_100, clk_timer, clk_RS422, clk_DAC : STD_LOGIC; -- clock signals
     signal enable : STD_LOGIC; -- global enable
     signal master_enable, mast_limit, mast_extend : STD_LOGIC; -- global input output signals
-    signal clk, sclk, uclk : STD_LOGIC; -- clock signals
     signal sys_enable, sys_reset : STD_LOGIC; -- control signals from control logic
     signal x_input_wire, x_lpf_wire, x_output_wire : STD_LOGIC_VECTOR(15 downto 0); 
     signal y_input_wire, y_lpf_wire, y_output_wire : STD_LOGIC_VECTOR(15 downto 0);

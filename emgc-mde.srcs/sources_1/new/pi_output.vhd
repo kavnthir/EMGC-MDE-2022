@@ -35,27 +35,24 @@ use IEEE.NUMERIC_STD.ALL;
 entity pi_output is
     Port ( clk : in STD_LOGIC;
            rst : in STD_LOGIC;
-           p_input : in STD_LOGIC_VECTOR(15 downto 0);
-           i_input : in STD_LOGIC_VECTOR(15 downto 0);
-           output : out STD_LOGIC_VECTOR(15 downto 0));
+           input : in STD_LOGIC_VECTOR(15 downto 0);
+           output : out STD_LOGIC_VECTOR(7 downto 0));
 end pi_output;
 
 architecture Behavioral of pi_output is
 -- Signal declarations (wires)
     constant denom : integer := 16;
-    signal int_pinput, int_iinput, int_output : integer;
+    signal int_input, int_output : integer;
 
 begin
 -- Functional VHDL code (logic)
 -- !!! Should renormalize +/-15dgr to +/-5V
-    int_pinput <= TO_INTEGER(unsigned(p_input));
-    int_iinput <= TO_INTEGER(unsigned(i_input));
+    int_input <= TO_INTEGER(unsigned(input));
     
     process(clk, rst) begin
         if (rst = '1') then
             int_output <= 0;
         elsif (clk'event and clk = '1') then
-            int_output <= (int_pinput / denom) + (int_iinput / denom);
         end if;
     end process; 
     

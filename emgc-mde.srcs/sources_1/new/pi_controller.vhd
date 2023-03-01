@@ -24,8 +24,8 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity pi_controller is
     Port ( clk : in STD_LOGIC;
-           en : in STD_LOGIC;
            rst : in STD_LOGIC;
+           en : in STD_LOGIC;
            input : in STD_LOGIC_VECTOR(15 downto 0);
            output : out STD_LOGIC_VECTOR(7 downto 0)); -- DAC takes 8 bits of input
 end pi_controller;
@@ -40,6 +40,6 @@ begin
     
     -- !!! may want to have multi-stage circuit here
     
-    output <= input; -- insert output scaling from 16 to 8 bit
+    --dac_gain : entity work.pi_output port map ();
 
 end Behavioral;
