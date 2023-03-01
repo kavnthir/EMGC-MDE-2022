@@ -39,5 +39,12 @@ architecture Behavioral of mac_demo is
 
 begin
 
+-- clock div from 100MHz to 100Hz and ?? Hz for RS422
+clk_div_100 : entity work.clk_div generic map (in_Hz => 100_000_000,
+                                               out_Hz => 100)
+                                  port map ()
+
+-- RS422 interface
+-- mac_controller with mast extend connected to an LED
 
 end Behavioral;
