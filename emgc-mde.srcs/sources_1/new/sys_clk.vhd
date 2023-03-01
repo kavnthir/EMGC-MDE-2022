@@ -36,7 +36,7 @@ use IEEE.NUMERIC_STD.ALL;
 -- !!! THIS MODULE does clock divisions for the various modules 
 
 entity sys_clk is
-    Generic ( input_Hz : integer := 50_000_000;
+    Generic ( input_Hz : integer := 100_000_000;
               clk_100_Hz : integer := 100;
               clk_timer_Hz : integer;
               clk_RS422_Hz : integer;

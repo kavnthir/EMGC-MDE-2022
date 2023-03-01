@@ -41,8 +41,8 @@ entity mac_controller is
            master_enable: in STD_LOGIC; -- enable input from GPIO
            mast_limit : in STD_LOGIC; -- mast limit switch input from GPIO
            x_channel, y_channel : in STD_LOGIC_VECTOR(15 downto 0); -- filtered x and y angles
-           sys_enable : out STD_LOGIC; -- enable for modules
-           sys_reset : out STD_LOGIC; -- reset for modules
+           --sys_enable : out STD_LOGIC; -- enable for modules
+           --sys_reset : out STD_LOGIC; -- reset for modules
            mast_extend: out STD_LOGIC); -- mast extend output for GPIO
 end mac_controller;
 
@@ -99,7 +99,7 @@ begin
     -- right now, the system enable for all other modules is just
     -- directly connected to the GPIO enable, so the controller will
     -- continue to stabilize the mast after it is fully extended
-    sys_enable <= master_enable;
-    sys_reset <= not master_enable;
+    --sys_enable <= master_enable;
+    --sys_reset <= not master_enable;
 
 end Behavioral;

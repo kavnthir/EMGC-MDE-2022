@@ -32,7 +32,8 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity rs422_interface is
-    Port ( clk, en : in STD_LOGIC;
+    Port ( sys_clk, fast_clk, enable : in STD_LOGIC;
+           -- Pmod pins
            x_data, y_data : out STD_LOGIC_VECTOR(15 downto 0));
 end rs422_interface;
 

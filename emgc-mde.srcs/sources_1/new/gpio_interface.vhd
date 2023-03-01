@@ -33,10 +33,8 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity gpio_interface is
     Port ( clk : in STD_LOGIC;
-           master_enable_in, mast_limit_in : in STD_LOGIC; -- input from board
-           mast_extend_in, x_sign_bit_in, y_sign_bit_in : in STD_LOGIC; -- input from MAC
-           mast_extend_out, x_sign_bit_out, y_sign_bit_out : out STD_LOGIC; -- output to board
-           master_enable_out, mast_limit_out : out STD_LOGIC); -- output to MAC
+           reset_in, enable_in, limit_in : in STD_LOGIC;
+           reset_out, enable_out, limit_out : out STD_LOGIC);
 end gpio_interface;
 
 architecture Behavioral of gpio_interface is
