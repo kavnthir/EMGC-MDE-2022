@@ -32,7 +32,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity mac_demo is
-    Port ( sys_clk_pin : in STD_LOGIC;
+    Port ( CLK100MHZ : in STD_LOGIC;
            -- Buttons/Switches
            btn : in STD_LOGIC_VECTOR(3 downto 0);
            sw : in STD_LOGIC_VECTOR(3 downto 0);
