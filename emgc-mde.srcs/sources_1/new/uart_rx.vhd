@@ -27,9 +27,9 @@ entity uart_rx is
 
 	Port (	clk : in std_logic;									-- clock
 			rst : in std_logic;									-- reset
-			rx_di : in std_logic;							-- RX line input
-			rx_do : out std_logic_vector(7 downto 0);		-- 8 bit data received
-			rx_dr : out std_logic );						-- active when data is received
+			rx_di : in std_logic;								-- RX line input
+			rx_do : out std_logic_vector(7 downto 0);			-- 8 bit data received
+			rx_dr : out std_logic );							-- active when data is received
 end uart_rx;
 
 architecture Behavioral of uart_rx is

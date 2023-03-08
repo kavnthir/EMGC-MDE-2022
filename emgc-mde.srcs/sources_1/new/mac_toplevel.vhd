@@ -51,7 +51,7 @@ begin
                                            uclk => uclk);
     
     rs422_in : entity work.rs422_interface port map (clk => uclk,
-                                                     en => enable,
+                                                     rst => sys_reset,
                                                      x_data => x_input_wire,
                                                      y_data => y_input_wire);
     
