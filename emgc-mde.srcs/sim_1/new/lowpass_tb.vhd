@@ -2,9 +2,9 @@
 -- Company: 
 -- Engineer: 
 -- 
--- Create Date: 11/07/2022 07:09:54 PM
+-- Create Date: 11/23/2022 01:56:56 PM
 -- Design Name: 
--- Module Name: lowpass_tb - Behavioral
+-- Module Name: my_lp_filter_tb - Behavioral
 -- Project Name: 
 -- Target Devices: 
 -- Tool Versions: 
@@ -19,11 +19,6 @@
 ----------------------------------------------------------------------------------
 
 
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.NUMERIC_STD.ALL;
-use STD.ENV.STOP;
-
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
 --use IEEE.NUMERIC_STD.ALL;
@@ -32,20 +27,21 @@ use STD.ENV.STOP;
 -- any Xilinx leaf cells in this code.
 --library UNISIM;
 --use UNISIM.VComponents.all;
+
+
 library ieee;
 use ieee.std_logic_1164.all;
 use std.textio.all;
 use ieee.std_logic_textio.all; -- require for writing/reading std_logic etc.
 use ieee.numeric_std.all;
 
-entity lowpass_tb is
---  Port ( );
-end lowpass_tb;
+entity my_lp_filter_tb is
+end my_lp_filter_tb;
 
-architecture Behavioral of lowpass_tb is
-    --Input 
-	file input_file : TEXT open READ_MODE is "noisy_sine_wave.txt";
-	file output_file : TEXT open WRITE_MODE is "filtered_sine_wave.txt";
+architecture Behavioral of my_lp_filter_tb is
+	--Input 
+	file input_file : TEXT open READ_MODE is "testwave.txt";
+	file output_file : TEXT open WRITE_MODE is "testwave_out.txt";
 	signal data_in : std_logic_vector(15 DOWNTO 0);
 	signal data_out : std_logic_vector(15 DOWNTO 0);
 	signal clk : std_logic := '0';
@@ -62,12 +58,16 @@ architecture Behavioral of lowpass_tb is
               clk                              => clk,
               en                       => enable,
               rst                            => reset,
-              input                       => data_in,
-              output                       => data_out      );
+              input_data                       => data_in,
+              output_data                       => data_out      );
 	
 	
 	--setting up clock
+	
 	clk <= not clk after 50 ns;
+	
+	--clk <= not clk after 5 ms;
+	
 	
 	
 	--setting start values for tb
@@ -76,24 +76,29 @@ architecture Behavioral of lowpass_tb is
 	reset <= '0';
 	wait for 10 ns;
 	reset <= '1';
-	wait for 10 ns;
+	wait for 1000 ns;
 	reset <= '0';
 	enable <= '1';
+	wait for 1000 ns;
+	
 	wait for 100000000 ns;
 	end process;
 	
 	
 	--Reads new input data into in_val at sample rate hz -> ns
-	process(sample)
+	process(clk)
 	variable input_line : line;
 	variable in_var : std_logic_vector(15 DOWNTO 0);
 	
 	begin
 	
+	
 	readline(input_file, input_line);
 	read(input_line, in_var);
 	in_val <= in_var;
 	data_in <= in_val;
+	
+	
 	end process;
 	
 	
@@ -102,6 +107,8 @@ architecture Behavioral of lowpass_tb is
 	sample <= not sample ;
 	wait for 100000 ns;
 	end process;
+	
+	
 	
 	
 	--Lowpass is active at everyclock edge
@@ -128,4 +135,5 @@ architecture Behavioral of lowpass_tb is
 	--write(output_line, data_out);
 	
 	--end process;
+
 end Behavioral;

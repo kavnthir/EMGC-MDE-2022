@@ -48,16 +48,19 @@ begin
     -- Clock signal: 20ns period
     clk <= not clk after 10 ns;
     
-    stimulus : process begin
-        wait for 5 ns;
-        input <= STD_LOGIC_VECTOR(TO_SIGNED(1, input'length));
-        wait for 20 ns;
-        input <= STD_LOGIC_VECTOR(TO_SIGNED(2, input'length));
-        wait for 20 ns;
-        input <= STD_LOGIC_VECTOR(TO_SIGNED(-3, input'length));
-        wait for 20 ns;
-        input <= STD_LOGIC_VECTOR(TO_SIGNED(0, input'length));
-        wait for 20 ns;
-        STOP;
-    end process;
+    --stimulus : process begin
+        --wait for 5 ns;
+        --input <= STD_LOGIC_VECTOR(TO_SIGNED(1, input'length));
+        --wait for 20 ns;
+        --input <= STD_LOGIC_VECTOR(TO_SIGNED(2, input'length));
+        --wait for 20 ns;
+        --input <= STD_LOGIC_VECTOR(TO_SIGNED(-3, input'length));
+        --wait for 20 ns;
+        --input <= STD_LOGIC_VECTOR(TO_SIGNED(0, input'length));
+        --wait for 20 ns;
+        --STOP;
+    --end process;
+    
+    
+    
 end Behavioral;
