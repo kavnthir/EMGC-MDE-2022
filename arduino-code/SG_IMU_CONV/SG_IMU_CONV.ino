@@ -4,33 +4,6 @@
 #include <SoftwareSerial.h>
 #include <utility/imumaths.h>
 
-/*
-   Connections
-   ===========
-   Connect SCL to analog 5
-   Connect SDA to analog 4
-   Connect VDD to 3.3-5V DC
-   Connect GROUND to common ground
-
-      Board layout:
-      +----------+
-      |         *| RST   PITCH  ROLL  HEADING
-  ADR |*        *| SCL
-  INT |*        *| SDA     ^            /->
-  PS1 |*        *| GND     |            |
-  PS0 |*        *| 3VO     Y    Z-->    \-X
-      |         *| VIN
-      +----------+
-*/
-
-/* Set the delay between fresh samples */
-// 1000ms / 10ms = 100 (Samples per second)
-#define BNO055_SAMPLERATE_DELAY_MS (10)
-
-// Check I2C device address and correct line below (by default address is 0x29 or 0x28)
-//                                   id, address
-Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x28);
-
 // Pinout for the RS422 interface
 // Reconfigured with jumpers as detailed on i/o shield documentation
 // Link below details default hardware UART serial outputs for boards for jumper config
@@ -44,34 +17,21 @@ Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x28);
 
 void setup(void) {
   Serial.begin(9600); // Baud rate is overkill, 60 baud min for system operation @ 100Hz
-  Serial.println("Orientation Sensor Test"); Serial.println("");
-
-  /* Initialise the sensor */
-  if(!bno.begin()) {
-    Serial.print("No BNO055 detected");
-    while(1);
-  }
-   
-  delay(1000);
-
-  /* Use external crystal for better accuracy */
-  bno.setExtCrystalUse(true);
 
   // pinMode(RS422_TX_PIN, OUTPUT);
   // RS422_BUS.begin(9600);
 }
 
 void loop(void) {
-  /* Get a new sensor event */
-  sensors_event_t event;
-  bno.getEvent(&event);
+
+  // convert analog to similar data range of BNO055 data output from speedgoat
 
   // Human readable sensor testing code
   // DO NOT UNCOMMENT DURING OPERATION
   // Serial.print(F("Orientation: "));
-  // Serial.print((float)event.orientation.y);
+  // Serial.print((float)orientation.y);
   // Serial.print(F(" "));
-  // Serial.print((float)event.orientation.z);
+  // Serial.print((float)orientation.z);
   // Serial.println(F(""));
 
   uint8_t data[5];
@@ -91,5 +51,5 @@ void loop(void) {
     Serial.write(data[i]);
   }
 
-  delay(BNO055_SAMPLERATE_DELAY_MS);
+  delay(10);
 }
