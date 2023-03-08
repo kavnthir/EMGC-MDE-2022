@@ -47,6 +47,7 @@ architecture Behavioral of mac_demo is
     signal clk_100, clk_rs422 : STD_LOGIC;
     signal reset, enable, limit, extend : STD_LOGIC;
     signal x_angle, y_angle : STD_LOGIC_VECTOR(15 downto 0);
+    signal sys_clk_pin : STD_LOGIC;
 
 begin
 
@@ -60,7 +61,7 @@ begin
     
     clk_div_rs422 : entity work.clk_div
     generic map (in_Hz => 100_000_000,
-                 out_Hz => ???)
+                 out_Hz => 100)
     port map (rst => reset,
               clk_in => sys_clk_pin,
               clk_out => clk_rs422);
