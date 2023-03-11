@@ -37,7 +37,7 @@ use IEEE.NUMERIC_STD.ALL;
 --use UNISIM.VComponents.all;
 
 entity maxout_timer is
-    Generic ( bitsize : integer :=  8);
+    Generic ( bitsize : integer := 8);
     Port ( clk : in STD_LOGIC;
            en : in STD_LOGIC;
            rst : in STD_LOGIC;
@@ -50,7 +50,7 @@ architecture Behavioral of maxout_timer is
 begin
     
     -- synchronus timer, synchronus reset
-    process (clk, rst) begin
+    process (clk) begin
         if (RISING_EDGE(clk)) then
             if (rst = '1') then
                 count <= (others => '0');
