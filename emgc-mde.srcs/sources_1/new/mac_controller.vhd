@@ -37,12 +37,12 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity mac_controller is
     Generic ( bit_precision : integer := 3); -- comparator precision
-    Port ( clk : in STD_LOGIC; -- Fast clock to run timer
+    Port ( clk : in STD_LOGIC;
+           rst : in STD_LOGIC;
+           timer_clock : in STD_LOGIC; -- Fast clock to run timer
            master_enable: in STD_LOGIC; -- enable input from GPIO
            mast_limit : in STD_LOGIC; -- mast limit switch input from GPIO
            x_channel, y_channel : in STD_LOGIC_VECTOR(15 downto 0); -- filtered x and y angles
-           --sys_enable : out STD_LOGIC; -- enable for modules
-           --sys_reset : out STD_LOGIC; -- reset for modules
            mast_extend: out STD_LOGIC); -- mast extend output for GPIO
 end mac_controller;
 
@@ -60,46 +60,32 @@ begin
     -- synchronus comparators:
     -- x_comp_wire and y_comp_wire are '1' when
     -- the corresponding input is < 0.5 degrees (0b'7 in fixed point)
-    
-    -- !!! maybe fix this by doing actual bit shift and compare instead of relying on integers
-    x_scomparator : process (clk) begin
+    s_comparator : process (clk) begin
         if (RISING_EDGE(clk)) then
             if (int_x_channel < comp_val and int_x_channel > -comp_val) then
                 x_comp_wire <= '1';
             else
                 x_comp_wire <= '0';
             end if;
-        end if;
-    end process;        
-    
-    y_scomparator : process (clk) begin
-        if (RISING_EDGE(clk)) then
+            
             if (int_y_channel < comp_val and int_y_channel > -comp_val) then
                 y_comp_wire <= '1';
             else
                 y_comp_wire <= '0';
             end if;
         end if;
-    end process;
+    end process;        
     
-    -- control for timer starting/resetting
-    -- always reset the timer to zero when comparison is false
-    -- extend mast when stable untill the limit is hit
     timer_enable <= master_enable and x_comp_wire and y_comp_wire;
     timer_reset <= not timer_enable;
     
-    timer : entity work.maxout_timer port map (clk => clk,
-                                               en => timer_enable,
-                                               rst => timer_reset,
-                                               max => timer_max);
+    -- set timer_clock to 256 Hz to maxout the 8-bit timer in 1 sec
+    timer : entity work.maxout_timer
+    port map (clk => timer_clock,
+              en => timer_enable,
+              rst => timer_reset,
+              max => timer_max);
                                                
     mast_extend <= master_enable and timer_max and not mast_limit;
-    
-    -- !!! rework this for any changes to logic
-    -- right now, the system enable for all other modules is just
-    -- directly connected to the GPIO enable, so the controller will
-    -- continue to stabilize the mast after it is fully extended
-    --sys_enable <= master_enable;
-    --sys_reset <= not master_enable;
 
 end Behavioral;
