@@ -33,29 +33,20 @@ use IEEE.NUMERIC_STD.ALL;
 --use UNISIM.VComponents.all;
 
 entity pi_output is
-    Port ( clk : in STD_LOGIC;
-           rst : in STD_LOGIC;
-           input : in STD_LOGIC_VECTOR(15 downto 0);
-           output : out STD_LOGIC_VECTOR(7 downto 0));
+    Port ( input_data : in STD_LOGIC_VECTOR(15 downto 0);
+           output_data : out STD_LOGIC_VECTOR(7 downto 0));
 end pi_output;
 
 architecture Behavioral of pi_output is
 -- Signal declarations (wires)
-    constant denom : integer := 16;
-    signal int_input, int_output : integer;
+    signal input : SIGNED(15 downto 0);
+    signal output : SIGNED(7 downto 0);
 
 begin
 -- Functional VHDL code (logic)
--- !!! Should renormalize +/-15dgr to +/-5V
-    int_input <= TO_INTEGER(unsigned(input));
-    
-    process(clk, rst) begin
-        if (rst = '1') then
-            int_output <= 0;
-        elsif (clk'event and clk = '1') then
-        end if;
-    end process; 
-    
-    output <= STD_LOGIC_VECTOR(TO_UNSIGNED(int_output, output'length));
+
+    input <= SIGNED(input_data); 
+    output <= (255 * (input + 160)) / 320; -- maybe this can be optimized?
+    output_data <= STD_LOGIC_VECTOR(output(7 downto 0));
 
 end Behavioral;

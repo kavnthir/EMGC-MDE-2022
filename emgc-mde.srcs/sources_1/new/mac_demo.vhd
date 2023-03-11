@@ -44,10 +44,10 @@ end mac_demo;
 
 architecture Behavioral of mac_demo is
 
-    signal clk_100, clk_rs422 : STD_LOGIC;
+    signal clk_100, clk_rs422, clk_dac : STD_LOGIC;
     signal reset, enable, limit, extend : STD_LOGIC;
     signal x_angle, y_angle : STD_LOGIC_VECTOR(15 downto 0);
-    signal sys_clk_pin : STD_LOGIC;
+    signal x_volts, y_volts : STD_LOGIC_VECTOR(7 downto 0);
 
 begin
 
@@ -56,15 +56,22 @@ begin
     generic map (in_Hz => 100_000_000,
                  out_Hz => 100)
     port map (rst => reset,
-              clk_in => sys_clk_pin,
+              clk_in => CLK100MHZ,
               clk_out => clk_100);
     
     clk_div_rs422 : entity work.clk_div
     generic map (in_Hz => 100_000_000,
-                 out_Hz => 100)
+                 out_Hz => ??)
     port map (rst => reset,
-              clk_in => sys_clk_pin,
+              clk_in => CLK100MHZ,
               clk_out => clk_rs422);
+              
+    clk_div_dac : entity work.clk_div
+    generic map (in_Hz => 100_000_000,
+                 out_Hz => ??)
+    port map (rst => reset,
+              clk_in => CLK100MHZ,
+              clk_out => clk_dac);
     
     -- RS422 interface
     rs422 : entity work.rs422_interface
@@ -74,6 +81,17 @@ begin
               --pmod
               x_data => x_angle,
               y_data => y_angle);
+              
+    dac : entity work.dac_interface
+    port map ();
+    
+    x_pi_out : entity work.pi_output
+    port map (input_data => x_angle,
+              output_data => x_volts);
+    
+    y_pi_out : entity work.pi_output
+    port map (input_data => y_angle,
+              output_data => y_volts);
     
     -- GPIO interface (button/switch synchronizer)
     gpio : entity work.gpio_interface
@@ -88,13 +106,4 @@ begin
     led(0) <= enable;
     led(1) <= extend;
     
-    -- mac_controller with mast extend connected to an LED
-    ctrl : entity work.mac_controller
-    port map (clk => clk_100,
-              master_enable => enable,
-              mast_limit => limit,
-              x_channel => x_angle,
-              y_channel => y_angle,
-              mast_extend => extend);
-
 end Behavioral;
