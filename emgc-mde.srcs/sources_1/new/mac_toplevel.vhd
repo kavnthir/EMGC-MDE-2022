@@ -24,79 +24,119 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
 entity mac_toplevel is
--- Port ( ); 
--- 4 output ports to DAC pmod pins, X input ports for RS422 pmod pins (defined in fpga datasheet)
+    Port ( CLK100MHZ : in STD_LOGIC;
+           -- Buttons/Switches
+           btn : in STD_LOGIC_VECTOR(3 downto 0);
+           sw : in STD_LOGIC_VECTOR(3 downto 0);
+           -- LED pins
+           led : out STD_LOGIC_VECTOR(3 downto 0);
+           -- rs422 Pmod pins
+           ja : inout STD_LOGIC_VECTOR(7 downto 0);
+           -- dac Pmod pins
+           jd : inout STD_LOGIC_VECTOR(7 downto 0)
+           ); 
 end mac_toplevel;
 
 architecture Behavioral of mac_toplevel is
     signal clk_100, clk_timer, clk_RS422, clk_DAC : STD_LOGIC; -- clock signals
-    signal enable : STD_LOGIC; -- global enable
-    signal master_enable, mast_limit, mast_extend : STD_LOGIC; -- global input output signals
-    signal sys_enable, sys_reset : STD_LOGIC; -- control signals from control logic
-    signal x_input_wire, x_lpf_wire, x_output_wire : STD_LOGIC_VECTOR(15 downto 0); 
-    signal y_input_wire, y_lpf_wire, y_output_wire : STD_LOGIC_VECTOR(15 downto 0);
-    signal x_sign_bit, y_sign_bit : STD_LOGIC; -- sign bits for the analog output
+    signal reset, enable, limit, extend : STD_LOGIC;
+    signal pitch_angle, roll_angle : STD_LOGIC_VECTOR(15 downto 0); 
+    signal pitch_angle_lpf, roll_angle_lpf : STD_LOGIC_VECTOR(15 downto 0);
+    signal pitch_voltage_raw, roll_voltage_raw : STD_LOGIC_VECTOR(15 downto 0);
+    signal pitch_voltage, roll_voltage : STD_LOGIC_VECTOR(7 downto 0);
+    
+    signal pitch_lowpass_valid, roll_lowpass_valid : STD_LOGIC;
+    signal pitch_pi_valid, roll_pi_valid : STD_LOGIC;
 begin
+    
+    sysclk : entity work.sys_clk
+    generic map (clk_timer_Hz => 256,
+                 clk_RS422_Hz => 1600,
+                 clk_DAC_Hz => 8000)
+    port map (clk_in => CLK100MHZ,
+              reset => reset,
+              clk_100 => clk_100,
+              clk_timer => clk_timer,
+              clk_RS422 => clk_RS422,
+              clk_DAC => clk_DAC);
+    
+    -- !! interface?
+    rs422_in : entity work.rs422_interface 
+    port map (sys_clk => clk_100,
+              fast_clk => clk_RS422,
+              rst => reset,
+              rxd => ??,
+              x_data => pitch_angle,
+              y_data => roll_angle);
+    
+    -- GPIO interface (button/switch synchronizer)
+    gpio : entity work.gpio_interface
+    port map (clk => clk_100,
+              reset_in => btn(0),
+              enable_in => sw(0),
+              limit_in => sw(1),
+              reset_out => reset,
+              enable_out => enable,
+              limit_out => limit);
+    led(0) <= enable;
+    led(1) <= extend;
+    
+    -- controller module, lights led when mast signaled to extend
+    control : entity work.mac_controller
+    port map (clk => clk_100,
+              rst => reset,
+              timer_clock => clk_timer,
+              master_enable => enable,
+              mast_limit => limit,
+              x_channel => pitch_angle_lpf,
+              y_channel => roll_angle_lpf,
+              mast_extend => extend);
 
-    -- !!! enable from FPGA switch should be debounced/synchronized in gpio_interface
-    -- !!! reset from FPGA button should be debounced/synchronized in gpio_interface
-    -- !!! enable and reset output should go directly into mac_controller
-    -- !!! rising edge of enable should pulse the reset in mac_controller
-    -- !!! all other modules are enabled/reset by sys_enable and sys_reset
-    -- !!! the sys_clk divider module should not have an enable, it should always
-    -- be enabled and top-level should be synchronized to clk_100
+    pitch_lowpass : entity work.lowpass
+    port map (clk => clk_100,
+              en => enable,
+              rst => reset,
+              input_data => pitch_angle,
+              output_valid => pitch_lowpass_valid,
+              output_data => pitch_angle_lpf);
+    roll_lowpass : entity work.lowpass
+    port map (clk => clk_100,
+              en => enable,
+              rst => reset,
+              input_data => roll_angle,
+              output_valid => roll_lowpass_valid,
+              output_data => roll_angle_lpf);
     
-    sysclk : entity work.sys_clk port map (clk => clk,
-                                           sclk => sclk,
-                                           uclk => uclk);
+    -- pi controller modules                                    
+    pitch_pi_ctrl : entity work.pi_controller
+    port map (clk => clk_100,
+              rst => reset,
+              input_valid => pitch_lowpass_valid,
+              input_data => pitch_angle_lpf,
+              output_valid => pitch_pi_valid,
+              output_data => pitch_voltage_raw);
+    roll_pi_ctrl : entity work.pi_controller
+    port map (clk => clk_100,
+              rst => reset,
+              input_valid => roll_lowpass_valid,
+              input_data => roll_angle_lpf,
+              output_valid => roll_pi_valid,
+              output_data => roll_voltage_raw);
+              
+    -- pi output modules
+    pitch_pi_out : entity work.pi_output
+    port map (input_data => pitch_voltage_raw,
+              output_data => pitch_voltage);
     
-    rs422_in : entity work.rs422_interface port map (clk => uclk,
-                                                     rst => sys_reset,
-                                                     x_data => x_input_wire,
-                                                     y_data => y_input_wire);
-    
-    gpio_in : entity work.gpio_interface port map (clk => clk,
-                                                   mast_extend => mast_extend,
-                                                   master_enable => master_enable,
-                                                   mast_limit => mast_limit,
-                                                   x_sign_bit => x_sign_bit,
-                                                   y_sign_bit => y_sign_bit);
-    
-    mac_ctrl : entity work.mac_controller port map (clk => clk,
-                                                    master_enable => master_enable,
-                                                    mast_limit => mast_limit,
-                                                    x_channel => x_lpf_wire,
-                                                    y_channel => y_lpf_wire,
-                                                    sys_enable => sys_enable,
-                                                    sys_reset => sys_reset,
-                                                    mast_extend => mast_extend);
-
-    x_lowpass : entity work.lowpass port map (clk => clk,
-                                              en => sys_enable,
-                                              rst => sys_reset,
-                                              input => x_input_wire,
-                                              output => x_lpf_wire);
-    y_lowpass : entity work.lowpass port map (clk => clk,
-                                              en => sys_enable,
-                                              rst => sys_reset,
-                                              input => y_input_wire,
-                                              output => y_lpf_wire);
-                                          
-    x_pi_ctrl : entity work.pi_controller port map (clk => clk,
-                                                    en => sys_enable,
-                                                    rst => sys_reset,
-                                                    input => x_lpf_wire,
-                                                    output => x_output_wire);
-    y_pi_ctrl : entity work.pi_controller port map (clk => clk,
-                                                    en => sys_enable,
-                                                    rst => sys_reset,
-                                                    input => y_lpf_wire,
-                                                    output => y_output_wire);
+    roll_pi_out : entity work.pi_output
+    port map (input_data => roll_voltage_raw,
+              output_data => roll_voltage);
     
     -- what are the rest of the output ports from this module?                                              
-    dac_out : entity work.dac_interface port map (clk => clk,
-                                                  sclk => sclk,
-                                                  x_data => x_output_wire,
-                                                  y_data => y_output_wire);
+    dac_out : entity work.dac_interface
+    port map (clk => clk_100,
+              sclk => clk_DAC,
+              x_data => pitch_voltage,
+              y_data => roll_voltage);
 
 end Behavioral;
