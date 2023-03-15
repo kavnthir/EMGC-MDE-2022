@@ -39,15 +39,16 @@ entity mac_demo is
            -- LED pins
            led : out STD_LOGIC_VECTOR(3 downto 0)
            -- rs422 Pmod pins
+           -- dac Pmod pins
             );
 end mac_demo;
 
 architecture Behavioral of mac_demo is
 
-    signal clk_100, clk_rs422 : STD_LOGIC;
+    signal clk_100, clk_timer : STD_LOGIC;
     signal reset, enable, limit, extend : STD_LOGIC;
     signal x_angle, y_angle : STD_LOGIC_VECTOR(15 downto 0);
-    signal sys_clk_pin : STD_LOGIC;
+    signal x_volts, y_volts : STD_LOGIC_VECTOR(7 downto 0);
 
 begin
 
@@ -56,31 +57,48 @@ begin
     generic map (in_Hz => 100_000_000,
                  out_Hz => 100)
     port map (rst => reset,
-              clk_in => sys_clk_pin,
+              clk_in => CLK100MHZ,
               clk_out => clk_100);
     
-    clk_div_rs422 : entity work.clk_div
+    -- clock div from 100MHz to 256Hz
+    clk_div_timer : entity work.clk_div
     generic map (in_Hz => 100_000_000,
-                 out_Hz => 100)
+                 out_Hz => 256)
     port map (rst => reset,
-              clk_in => sys_clk_pin,
-              clk_out => clk_rs422);
+              clk_in => CLK100MHZ,
+              clk_out => clk_timer);
     
-    -- RS422 interface
-    rs422 : entity work.rs422_interface
-    port map (sys_clk => clk_100,
-              fast_clk => clk_rs422,
-              enable => enable,
-              --pmod
-              x_data => x_angle,
-              y_data => y_angle);
+    -- !!! for no-IO synthesis, use thise inputs
+    -- map the four switches to x input * 4
+    x_angle <= "0000000000" & sw(3 downto 0) & "00";
+    y_angle <= (others => '0');
+    
+    -- controller module, lights led when mast signaled to extend
+    control : entity work.mac_controller
+    port map (clk => clk_100,
+              rst => reset,
+              timer_clock => clk_timer,
+              master_enable => enable,
+              mast_limit => limit,
+              x_channel => x_angle,
+              y_channel => y_angle,
+              mast_extend => extend);
+    
+    -- output modules, disconnected for synthesis
+    x_pi_out : entity work.pi_output
+    port map (input_data => x_angle,
+              output_data => x_volts);
+    
+    y_pi_out : entity work.pi_output
+    port map (input_data => y_angle,
+              output_data => y_volts);
     
     -- GPIO interface (button/switch synchronizer)
     gpio : entity work.gpio_interface
     port map (clk => clk_100,
               reset_in => btn(0),
-              enable_in => sw(0),
-              limit_in => sw(1),
+              enable_in => '1',--sw(0),
+              limit_in => '0',--sw(1),
               reset_out => reset,
               enable_out => enable,
               limit_out => limit);
@@ -88,13 +106,4 @@ begin
     led(0) <= enable;
     led(1) <= extend;
     
-    -- mac_controller with mast extend connected to an LED
-    ctrl : entity work.mac_controller
-    port map (clk => clk_100,
-              master_enable => enable,
-              mast_limit => limit,
-              x_channel => x_angle,
-              y_channel => y_angle,
-              mast_extend => extend);
-
 end Behavioral;

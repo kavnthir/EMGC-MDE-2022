@@ -38,13 +38,18 @@ entity gpio_interface is
 end gpio_interface;
 
 architecture Behavioral of gpio_interface is
-
+    
+    signal reset_sync, enable_sync, limit_sync : STD_LOGIC;
+    
 begin
 
-    -- synchronize and debounce (if necessary) for switches
-    -- do any kind of preprocessing for the gpio pins,
-    -- or just pass them through if not
-    
-    -- test if the switches/pins can be assigned in here instead of top-level
+    gpio_sync : process (clk) begin
+        reset_sync <= reset_in;
+        enable_sync <= enable_in;
+        limit_sync <= limit_in;
+        reset_out <= reset_sync;
+        enable_out <= enable_sync;
+        limit_out <= limit_sync;
+    end process;
 
 end Behavioral;
