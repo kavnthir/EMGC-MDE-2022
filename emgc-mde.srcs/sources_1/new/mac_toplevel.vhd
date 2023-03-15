@@ -133,10 +133,10 @@ begin
               output_data => roll_voltage);
     
     -- what are the rest of the output ports from this module?                                              
-    dac_out : entity work.dac_interface
-    port map (clk => clk_100,
-              sclk => clk_DAC,
-              x_data => pitch_voltage,
-              y_data => roll_voltage);
+    -- dac_out : entity work.dac_interface
+    -- port map (clk => clk_100,
+    --          sclk => clk_DAC,
+    --          x_data => pitch_voltage,
+    --          y_data => roll_voltage);
 
 end Behavioral;
