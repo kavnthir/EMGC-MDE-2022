@@ -36,6 +36,8 @@ entity mac_demo is
            -- Buttons/Switches
            btn : in STD_LOGIC_VECTOR(3 downto 0);
            sw : in STD_LOGIC_VECTOR(3 downto 0);
+           -- test GPIO in
+           speedgoat_16bit_in : in STD_LOGIC_VECTOR(15 downto 0);
            -- LED pins
            led : out STD_LOGIC_VECTOR(3 downto 0);
            -- DAC pins
@@ -49,6 +51,8 @@ architecture Behavioral of mac_demo is
     signal reset, enable, limit, extend : STD_LOGIC;
     signal x_angle, y_angle : STD_LOGIC_VECTOR(15 downto 0);
     signal x_volts, y_volts : STD_LOGIC_VECTOR(7 downto 0);
+
+    signal speedgoat_16bit_in_sync: STD_LOGIC_VECTOR(15 downto 0);
 
     signal dac_busy : STD_LOGIC;
     signal D0, D1 : STD_LOGIC;
@@ -74,7 +78,11 @@ begin
     
     -- !!! for no-IO synthesis, use thise inputs
     -- map the four switches to x input * 4
-    x_angle <= "0000000000" & sw(3 downto 0) & "00";
+    --x_angle <= "0000000000" & sw(3 downto 0) & "00";
+    GPIO_sync : process (clk_100) begin
+        speedgoat_16bit_in_sync <= speedgoat_16bit_in;
+        x_angle <= speedgoat_16bit_in_sync;
+    end process;
     y_angle <= (others => '0');
     
     -- controller module, lights led when mast signaled to extend
