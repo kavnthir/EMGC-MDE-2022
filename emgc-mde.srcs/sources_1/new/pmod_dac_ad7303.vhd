@@ -25,8 +25,8 @@ USE ieee.std_logic_1164.all;
 
 ENTITY pmod_dac_ad7303 IS
   GENERIC(
-    clk_freq    : INTEGER := 50;  --system clock frequency in MHz
-    spi_clk_div : INTEGER := 1);  --spi_clk_div = clk_freq/60 (answer rounded up)
+    clk_freq    : INTEGER := 100;  --system clock frequency in MHz
+    spi_clk_div : INTEGER := 1666667);  --spi_clk_div = clk_freq/60 (answer rounded up)
   PORT(
     clk        : IN      STD_LOGIC;                      --system clock
     reset_n    : IN      STD_LOGIC;                      --active low asynchronous reset
