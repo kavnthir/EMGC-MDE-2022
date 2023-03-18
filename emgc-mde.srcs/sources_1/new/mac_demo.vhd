@@ -106,23 +106,23 @@ begin
               reset_out => reset,
               enable_out => enable,
               limit_out => limit);
+    led(0) <= enable;
+    led(1) <= extend;
 
     -- DAC interface
     ja <= sclk & D1 & D0 & sync_n;
-    dac_interface : entity work.pmod_dac_ad7303 port map (clk => CLK100MHZ,
-                                                          reset_n => '1',
-                                                          dac_tx_ena => '1',
-                                                          dac_1_ctrl => "110000",
-                                                          dac_1_data => x_volts,
-                                                          dac_2_ctrl => "110000",
-                                                          dac_2_data => y_volts,
-                                                          busy => dac_busy,
-                                                          mosi_0 => D0,
-                                                          mosi_1 => D1,
-                                                          sclk => sclk,
-                                                          ss_n => sync_n);
-    
-    led(0) <= enable;
-    led(1) <= extend;
+    dac_interface : entity work.pmod_dac_ad7303
+    port map (clk => CLK100MHZ,
+              reset_n => '1',
+              dac_tx_ena => '1',
+              dac_1_ctrl => "110000",
+              dac_1_data => x_volts,
+              dac_2_ctrl => "110000",
+              dac_2_data => y_volts,
+              busy => dac_busy,
+              mosi_0 => D0,
+              mosi_1 => D1,
+              sclk => sclk,
+              ss_n => sync_n);
     
 end Behavioral;
