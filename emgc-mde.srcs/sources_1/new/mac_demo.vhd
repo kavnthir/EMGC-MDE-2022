@@ -37,9 +37,9 @@ entity mac_demo is
            btn : in STD_LOGIC_VECTOR(3 downto 0);
            sw : in STD_LOGIC_VECTOR(3 downto 0);
            -- LED pins
-           led : out STD_LOGIC_VECTOR(3 downto 0)
-           -- rs422 Pmod pins
-           -- dac Pmod pins
+           led : out STD_LOGIC_VECTOR(3 downto 0);
+           -- DAC pins
+           ja : out STD_LOGIC_VECTOR (3 downto 0)
             );
 end mac_demo;
 
@@ -50,6 +50,10 @@ architecture Behavioral of mac_demo is
     signal x_angle, y_angle : STD_LOGIC_VECTOR(15 downto 0);
     signal x_volts, y_volts : STD_LOGIC_VECTOR(7 downto 0);
 
+    signal dac_busy : STD_LOGIC;
+    signal D0, D1 : STD_LOGIC;
+    signal sclk : STD_LOGIC;
+    signal sync_n : STD_LOGIC_VECTOR(0 DOWNTO 0);
 begin
 
     -- clock div from 100MHz to 100Hz and ?? Hz for RS422
@@ -102,6 +106,21 @@ begin
               reset_out => reset,
               enable_out => enable,
               limit_out => limit);
+
+    -- DAC interface
+    ja <= sclk & D1 & D0 & sync_n;
+    dac_interface : entity work.pmod_dac_ad7303 port map (clk => CLK100MHZ,
+                                                          reset_n => '1',
+                                                          dac_tx_ena => '1',
+                                                          dac_1_ctrl => "110000",
+                                                          dac_1_data => x_volts,
+                                                          dac_2_ctrl => "110000",
+                                                          dac_2_data => y_volts,
+                                                          busy => dac_busy,
+                                                          mosi_0 => D0,
+                                                          mosi_1 => D1,
+                                                          sclk => sclk,
+                                                          ss_n => sync_n);
     
     led(0) <= enable;
     led(1) <= extend;
