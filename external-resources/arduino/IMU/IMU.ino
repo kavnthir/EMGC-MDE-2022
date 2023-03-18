@@ -38,8 +38,8 @@ Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x28);
 
 // If SoftwareSerial library were to be used instead of onboard serializer, the below pin defines are to be modified and used.
 // SoftwareSerial libraries is signficantly slower than hardware serializers.
-// const int RS422_TX_PIN = 2; 
-// const int RS422_RX_PIN = 3; 
+// const int RS422_TX_PIN = 2;
+// const int RS422_RX_PIN = 3;
 // SoftwareSerial RS422_BUS = SoftwareSerial (RS422_RX_PIN, RS422_TX_PIN);
 
 void setup(void) {
@@ -47,11 +47,11 @@ void setup(void) {
   Serial.println("Orientation Sensor Test"); Serial.println("");
 
   /* Initialise the sensor */
-  if(!bno.begin()) {
+  if (!bno.begin()) {
     Serial.print("No BNO055 detected");
-    while(1);
+    while (1);
   }
-   
+
   delay(1000);
 
   /* Use external crystal for better accuracy */
@@ -74,18 +74,22 @@ void loop(void) {
   // Serial.print((float)event.orientation.z);
   // Serial.println(F(""));
 
+  uint16_t pitch = (int)(event.orientation.y*16);
+  uint16_t roll = (int)(event.orientation.z*16);;
+
   uint8_t data[5];
   // Start bytes
   // Multiple ensure system stability
-  data[0] = 0xAB; 
-  data[1] = 0xCD; 
-  data[2] = 0xEF; 
+  data[0] = 0xAB;
+  data[1] = 0xCD;
+  data[2] = 0xEF;
   // Data
-  data[3] = (uint8_t)(event.orientation.y >> 8); // Orientation Y (high byte)
-  data[4] = (uint8_t)(event.orientation.y); // Orientation Y (low byte)
-  data[5] = (uint8_t)(event.orientation.z >> 8); // Orientation Z (high byte)
-  data[6] = (uint8_t)(event.orientation.z); // Orientation Z (low byte)
-  
+  data[3] = (uint8_t)(pitch >> 8); // Orientation Y (high byte)
+  data[4] = (uint8_t)(pitch); // Orientation Y (low byte)
+  data[5] = (uint8_t)(roll >> 8); // Orientation Z (high byte)
+  data[6] = (uint8_t)(roll); // Orientation Z (low byte)
+
+
   // Send the packed data over the RS422 interface
   for (int i = 0; i < 5; i++) {
     Serial.write(data[i]);

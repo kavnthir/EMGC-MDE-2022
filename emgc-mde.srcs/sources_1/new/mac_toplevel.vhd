@@ -65,7 +65,7 @@ begin
     port map (sys_clk => clk_100,
               fast_clk => clk_RS422,
               rst => reset,
-              rxd => ??,
+              rxd => '1',
               x_data => pitch_angle,
               y_data => roll_angle);
     
