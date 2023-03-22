@@ -78,12 +78,13 @@ begin
     
     -- !!! for no-IO synthesis, use thise inputs
     -- map the four switches to x input * 4
-    --x_angle <= "0000000000" & sw(3 downto 0) & "00";
     GPIO_sync : process (clk_100) begin
         speedgoat_16bit_in_sync <= speedgoat_16bit_in;
         x_angle <= speedgoat_16bit_in_sync;
     end process;
-    y_angle <= (others => '0');
+    led(2) <= x_angle(0);
+    
+    y_angle <= "0000000000" & sw(3 downto 0) & "00";
     
     -- controller module, lights led when mast signaled to extend
     control : entity work.mac_controller
