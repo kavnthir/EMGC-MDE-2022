@@ -1,48 +1,59 @@
-Fs = 100; %sample frequency Hz
+clear;
 
 T_err = readtable('MACdata_err.csv');
 T_out = readtable('MACdata_out.csv');
 err_time = table2array(T_err(:,1));
-x = table2array(T_err(:,2));
+err_vals = table2array(T_err(:,2));
 out_time = table2array(T_out(:,1));
 out_vals = table2array(T_out(:,2));
 
 Kp = 2.0;
 Ki = 0.125;
 
-C0 = Kp;
-C1 = -Kp + (1 * Ki);
+C0 = int32(2^17) * (Kp);                    %2  < 62,914,560
+C1 = int32(2^17) * (-Kp + (0.01 * Ki));     %-1.99875 * 2^17
+
+% convert input to fixed point
+x = int32(err_vals * 16);
 
 tstart = 0;
-%u = ones(size(x) + [tstart, 0]);
-%u(1:tstart) = 0;
-% for i = 1:15
-%     u(tstart + i) = 15 - i + 1;
-% end
-
-y = zeros(size(x));
-%u(1) = 15; %initial value
+y = int32(zeros(size(x)));
+x(1) = 0;
+x(2:size(x,1)) = 16;
 for i = (tstart + 2):(size(x, 1) + tstart)
-    y(i) = (C0 * x(i)) + (C1 * x(i - 1)) +  y(i - 1);
+    y(i) = (C0 * x(i)) + (C1 * x(i - 1)) + y(i - 1);
 end 
 
-% integral = 0.0;
-% PI_reg = zeros(size(err_vals));
-% for i = 1:size(err_vals, 1)
-%     integral = integral + err_vals(i, 1);
-%     PI_reg(i, 1) = (Kp * err_vals(i, 1)) + (Ki * integral);
-% end
+% PI common denominator
+y = y / int32(2^17);
 
+% PI Gain:
+y = (3 * y) / 16;
+
+% DAC adjustments:
+y = (255 * (y + 160)) / 320;    % convert to 1 byte
+y = (3.3 * double(y)) / 255;    % convert to analog
+
+% AMP adjustment:
+y = 6 * (y - 1.65);             % shift down and amp by 6
+
+% PLOT
 tend = 2000;
+figure();
+x = double(x) / 16;
 plot(err_time(1:tend), x(1:tend)); %test input
-
-% hold on;
-% plot(out_time(1:tend), out_vals(1:tend)); %test output
-% hold off;
 
 hold on;
 plot(err_time(1:tend), y(1:tend));
 hold off;
+
+title('PI Response');
+legend('PI Input (degrees)', 'PI Output (volts)');
+xlabel('Time (s)');
+
+% hold on;
+% plot(out_time(1:tend), out_vals(1:tend)); %test output
+% hold off;
 
 % hold on;
 % stem(err_time(1:tend), u(1:tend));

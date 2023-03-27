@@ -42,7 +42,7 @@ architecture Behavioral of pi_controller_tb is
     signal in_valid : STD_LOGIC := '0';
     signal input : STD_LOGIC_VECTOR(15 downto 0);
     signal out_valid : STD_LOGIC;
-    signal output: STD_LOGIC_VECTOR(15 downto 0);
+    signal output: STD_LOGIC_VECTOR(7 downto 0);
     
     signal num_input : integer := 0;
 begin
@@ -69,14 +69,14 @@ begin
         rst <= '0';
         wait for 2 ns;
         in_valid <= '1';
-        num_input <= 15;
+        num_input <= 16;
         wait for 1 ns;
-        for i in 1 to 14 loop
-            num_input <= num_input - 1;
-            wait for 1 ns;
-        end loop;
+--        for i in 1 to 14 loop
+--            num_input <= num_input - 1;
+--            wait for 1 ns;
+--        end loop;
         
-        wait for 10 ns;
+        wait for 50 ns;
         STOP;
     end process;
     
