@@ -40,13 +40,13 @@ end pi_output;
 architecture Behavioral of pi_output is
 -- Signal declarations (wires)
     signal input : SIGNED(15 downto 0);
-    signal output : SIGNED(31 downto 0);
+    signal output : SIGNED(63 downto 0);
 
 begin
 -- Functional VHDL code (logic)
 
     input <= SIGNED(input_data); 
-    output <= (255 * (input + 160)) / 320;
+    output <= (255 * (((3 * input) / 16) + 160)) / 320;
     output_data <= STD_LOGIC_VECTOR(output(7 downto 0));
 
 end Behavioral;

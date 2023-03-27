@@ -50,7 +50,9 @@ architecture Behavioral of mac_demo is
     signal clk_100, clk_timer : STD_LOGIC;
     signal reset, enable, limit, extend : STD_LOGIC;
     signal x_angle, y_angle : STD_LOGIC_VECTOR(15 downto 0);
+    signal x_pi_out, y_pi_out : STD_LOGIC_VECTOR(15 downto 0);
     signal x_volts, y_volts : STD_LOGIC_VECTOR(7 downto 0);
+    signal x_pi_valid, y_pi_valid : STD_LOGIC;
 
     signal speedgoat_16bit_in_sync: STD_LOGIC_VECTOR(15 downto 0);
 
@@ -97,13 +99,29 @@ begin
               y_channel => y_angle,
               mast_extend => extend);
     
+    -- pi controller modules                                    
+    pitch_pi_ctrl : entity work.pi_controller
+    port map (clk => clk_100,
+              rst => reset,
+              input_valid => '1',
+              input_data => x_angle,
+              output_valid => x_pi_valid,
+              output_data => x_pi_out);
+    roll_pi_ctrl : entity work.pi_controller
+    port map (clk => clk_100,
+              rst => reset,
+              input_valid => '1',
+              input_data => y_angle,
+              output_valid => x_pi_valid,
+              output_data => y_pi_out);
+    
     -- output modules, disconnected for synthesis
-    x_pi_out : entity work.pi_output
-    port map (input_data => x_angle,
+    x_pi_output : entity work.pi_output
+    port map (input_data => x_pi_out,
               output_data => x_volts);
     
-    y_pi_out : entity work.pi_output
-    port map (input_data => y_angle,
+    y_pi_output : entity work.pi_output
+    port map (input_data => y_pi_out,
               output_data => y_volts);
     
     -- GPIO interface (button/switch synchronizer)
