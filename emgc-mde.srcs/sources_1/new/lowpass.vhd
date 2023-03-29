@@ -253,18 +253,17 @@ BEGIN
 
   output_typeconvert <= resize(sum10(39 DOWNTO 27), 16);
   
-  --UP_COUNTER:entity work.UP_COUNTER 
-  --port map (clk => clk, reset=>countR, counter => count);
+  --UP_COUNTER port map (clk => clk, reset=>countR, counter => count);
   
   Output_Register_process : PROCESS (clk)
   BEGIN
     IF clk'event AND clk = '1' THEN
-      IF rst = '1' THEN
+      --IF rst = '1' THEN
         --output_register <= (OTHERS => '0');
-	output_register <= signed(input_data);
-      ELSIF en = '1' THEN
+	--output_register <= signed(input_data);
+      --ELSIF en = '1' THEN
         output_register <= output_typeconvert;
-      END IF;
+      --END IF;
     END IF; 
   END PROCESS Output_Register_process;
 
