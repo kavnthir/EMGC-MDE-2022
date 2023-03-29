@@ -125,6 +125,7 @@ ARCHITECTURE rtl OF lowpass IS
   SIGNAL add_temp_9                       : signed(40 DOWNTO 0); -- sfix41_En31
   SIGNAL output_typeconvert               : signed(15 DOWNTO 0); -- sfix16_En4
   SIGNAL output_register                  : signed(15 DOWNTO 0); -- sfix16_En4
+  SIGNAL rst_wire                  : signed(15 DOWNTO 0);
   
   SIGNAL count : std_logic_vector(3 DOWNTO 0);
   SIGNAL countR : std_logic;
@@ -258,17 +259,31 @@ BEGIN
   Output_Register_process : PROCESS (clk)
   BEGIN
     IF clk'event AND clk = '1' THEN
-      --IF rst = '1' THEN
-        --output_register <= (OTHERS => '0');
+      IF rst = '1' THEN
+       output_register <= (OTHERS => '0');
 	--output_register <= signed(input_data);
-      --ELSIF en = '1' THEN
-        output_register <= output_typeconvert;
-      --END IF;
+      ELSIF en = '1' THEN
+	  --rst_wire <= (OTHERS => rst);
+	  --output_register <= (OTHERS => (output_typeconvert AND rst));
+       output_register <= output_typeconvert;
+      END IF;
     END IF; 
   END PROCESS Output_Register_process;
 
   -- Assignment Statements
+  
+  --process begin
+  --IF rst = '1' THEN
+    --output_data <= (OTHERS => '0');
+	--output_register <= signed(input_data);
+  --ELSIF en = '1' THEN
+        --output_data <= std_logic_vector(output_register);
+  --END IF;
+  --end process;
+  
   output_data <= std_logic_vector(output_register);
+  
+  --output_data <= std_logic_vector(output_register);
 END rtl;
 
 
