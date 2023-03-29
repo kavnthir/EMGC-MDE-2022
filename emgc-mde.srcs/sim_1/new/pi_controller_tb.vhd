@@ -22,6 +22,8 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
+use STD.TEXTIO.ALL;
+use IEEE.STD_LOGIC_TEXTIO.ALL; -- require for writing/reading std_logic etc.
 use STD.ENV.STOP;
 
 -- Uncomment the following library declaration if using
@@ -40,11 +42,11 @@ architecture Behavioral of pi_controller_tb is
     signal clk : STD_LOGIC := '1';
     signal rst : STD_LOGIC := '0';
     signal in_valid : STD_LOGIC := '0';
-    signal input : STD_LOGIC_VECTOR(15 downto 0);
+    signal input : STD_LOGIC_VECTOR(15 downto 0) := (others => '0');
     signal out_valid : STD_LOGIC;
     signal output: STD_LOGIC_VECTOR(7 downto 0);
     
-    signal num_input : integer := 0;
+    -- signal num_input : integer := 0;
 begin
 
     UUT : entity work.pi_controller 
@@ -58,9 +60,17 @@ begin
     -- Clock signal: 1ns period
     clk <= not clk after 0.5 ns;
     
-    input <= STD_LOGIC_VECTOR(TO_SIGNED(num_input, input'length));
+    -- input <= STD_LOGIC_VECTOR(TO_SIGNED(num_input, input'length));
     
-    stimulus : process begin
+    stimulus : process is 
+        file input_file : text;
+        file output_file : text;
+        variable in_line : line;
+        variable in_val : STD_LOGIC_VECTOR(15 downto 0) := (others => '0');
+    begin
+        file_open(input_file, "pi_test_in.txt", read_mode);
+        file_open(output_file, "pi_test_out.txt", write_mode);
+    
         wait for 5 ns; -- valid bit propogates
         assert out_valid = '0' report "valid bit falure";
         wait for 2 ns;
@@ -69,14 +79,16 @@ begin
         rst <= '0';
         wait for 2 ns;
         in_valid <= '1';
-        num_input <= 16;
         wait for 1 ns;
---        for i in 1 to 14 loop
---            num_input <= num_input - 1;
---            wait for 1 ns;
---        end loop;
         
-        wait for 50 ns;
+        while not endfile(input_file) loop
+            readline(input_file, in_line);
+            read(in_line, in_val);
+            input <= in_val;
+            wait for 1 ns;
+        end loop;
+        
+        wait for 1000 ns;
         STOP;
     end process;
     

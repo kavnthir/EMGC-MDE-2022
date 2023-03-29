@@ -19,7 +19,7 @@ x = int32(err_vals * 16);
 tstart = 0;
 y = int32(zeros(size(x)));
 x(1) = 0;
-x(2:size(x,1)) = 16;
+%x(2:size(x,1)) = 16;
 for i = (tstart + 2):(size(x, 1) + tstart)
     y(i) = (C0 * x(i)) + (C1 * x(i - 1)) + y(i - 1);
 end 
@@ -32,10 +32,10 @@ y = (3 * y) / 16;
 
 % DAC adjustments:
 y = (255 * (y + 160)) / 320;    % convert to 1 byte
-y = (3.3 * double(y)) / 255;    % convert to analog
+%y = (3.3 * double(y)) / 255;    % convert to analog
 
 % AMP adjustment:
-y = 6 * (y - 1.65);             % shift down and amp by 6
+%y = 6 * (y - 1.65);             % shift down and amp by 6
 
 % PLOT
 tend = 2000;
@@ -59,4 +59,10 @@ xlabel('Time (s)');
 % stem(err_time(1:tend), u(1:tend));
 % hold off;
 
-
+x_int16 = int16(floor(16 * x));
+x_bin16 = dec2bin(typecast(x_int16, 'uint16'), 16);
+fileID = fopen('pi_test_in.txt','w');
+for i = 1:size(x_bin16, 1)
+    fprintf(fileID, strcat(x_bin16(i,:), '\n'));
+end
+fclose(fileID);
