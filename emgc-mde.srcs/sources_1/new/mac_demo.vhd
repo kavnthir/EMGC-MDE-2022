@@ -50,6 +50,7 @@ architecture Behavioral of mac_demo is
     signal clk_100, clk_timer : STD_LOGIC;
     signal reset, enable, limit, extend : STD_LOGIC;
     signal x_angle, y_angle : STD_LOGIC_VECTOR(15 downto 0);
+    signal x_angle_lpf, y_angle_lpf : STD_LOGIC_VECTOR(15 downto 0);
     signal x_volts, y_volts : STD_LOGIC_VECTOR(7 downto 0);
     signal x_pi_valid, y_pi_valid : STD_LOGIC;
 
@@ -99,21 +100,42 @@ begin
               mast_extend => extend);
     
     -- pi controller modules                                    
-    pitch_pi_ctrl : entity work.pi_controller
+    --pitch_pi_ctrl : entity work.pi_controller
+    --port map (clk => clk_100,
+              --rst => reset,
+              --input_valid => '1',
+              --input_data => x_angle,
+              --output_valid => x_pi_valid,
+              --output_data => x_volts);
+    --roll_pi_ctrl : entity work.pi_controller
+    --port map (clk => clk_100,
+              --rst => reset,
+              --input_valid => '1',
+              --input_data => y_angle,
+              --output_valid => y_pi_valid,
+              --output_data => y_volts);
+    pitch_lowpass : entity work.lowpass
     port map (clk => clk_100,
+              en => enable,
               rst => reset,
-              input_valid => '1',
               input_data => x_angle,
-              output_valid => x_pi_valid,
-              output_data => x_volts);
-    roll_pi_ctrl : entity work.pi_controller
+              output_data => x_angle_lpf);
+    roll_lowpass : entity work.lowpass
     port map (clk => clk_100,
+              en => enable,
               rst => reset,
-              input_valid => '1',
               input_data => y_angle,
-              output_valid => y_pi_valid,
-              output_data => y_volts);
+              output_data => y_angle_lpf);
+            
+    -- pi output modules
+    pitch_pi_out : entity work.pi_output
+    port map (input_data => x_angle_lpf,
+              output_data => x_volts);
     
+    roll_pi_out : entity work.pi_output
+    port map (input_data => y_angle_lpf,
+              output_data => y_volts);
+              
     -- GPIO interface (button/switch synchronizer)
     gpio : entity work.gpio_interface
     port map (clk => clk_100,
