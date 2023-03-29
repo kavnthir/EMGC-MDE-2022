@@ -46,7 +46,7 @@ begin
 -- Functional VHDL code (logic)
 
     input <= SIGNED(input_data); 
-    output <= (255 * (((3 * input) / 16) + 160)) / 320;
+    output <= (255 * (input + 160)) / 320;
     output_data <= STD_LOGIC_VECTOR(output(7 downto 0));
 
 end Behavioral;
