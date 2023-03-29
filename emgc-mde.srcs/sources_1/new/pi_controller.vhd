@@ -43,20 +43,18 @@ architecture Behavioral of pi_controller is
     
     -- Pipeline
     signal valid_reg : STD_LOGIC;
-    signal input_0, input_1, output_1, output_buf1 : SIGNED(31 downto 0);
-    signal output_0, output_buf0 : SIGNED(63 downto 0);
+    signal input_0, input_1, output_buf1 : SIGNED(31 downto 0);
+    signal output_0, output_1, output_buf0 : SIGNED(63 downto 0);
     
 begin
-    -- type conversions
+    -- type conversions (convert 64 bit value to 8 bit value)
     input_0 <= resize(SIGNED(input_data), 32);
-    -- !! check bit cropping
     output_buf0 <= (3 * shift_right(output_0(31 downto 0), Sh)) / 16;   -- Denom and Gain
     output_buf1 <= (255 * (output_buf0(15 downto 0) + 160)) / 320;      -- Convert to byte
     output_data <= STD_LOGIC_VECTOR(output_buf1(7 downto 0));           -- Output typecast
     output_valid <= valid_reg;
     
-    -- arithmetic
-    -- assume steady input at t=-1 when input becomes valid
+    -- arithmetic (products and output_1 are 64 bit)
 --    output_0 <= (C0 * input_0) + (C1 * input_0) when
 --        (input_valid = '1' and valid_reg = '0') else
 --        (C0 * input_0) + (C1 * input_1) + output_1;
@@ -73,7 +71,7 @@ begin
             -- PI controller pipeline
             else
                 input_1 <= input_0;
-                output_1 <= output_0(31 downto 0);
+                output_1 <= output_0;
                 valid_reg <= input_valid;
             end if;
         end if;
