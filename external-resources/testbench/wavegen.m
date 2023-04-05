@@ -1,3 +1,10 @@
+filename = 'testwave_out.txt';
+opts = detectImportOptions(filename);
+opts = setvartype(opts,'char');  % or 'string'
+lp_tb = readtable(filename, opts);
+lp_in = table2array(lp_tb(:,1));
+lp_rint16 = bin2dec(lp_in)/16;
+
 % generate decreasing discrete exponential
 Tf = 5; %total seconds
 Fs = 100; %sample frequency Hz
@@ -30,6 +37,9 @@ end
 At_rint16 = bin2dec(At_bin16)/16;
 figure;
 plot(t, At_rint16);
+hold on;
+plot(t(1:499), lp_rint16);
+hold off;
 
 % print the waveform to fixed point binary
 fileID = fopen('testwave.txt','w');

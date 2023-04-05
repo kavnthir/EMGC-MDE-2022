@@ -39,11 +39,13 @@ entity mac_controller is
     Generic ( bit_precision : integer := 3); -- comparator precision
     Port ( clk : in STD_LOGIC;
            rst : in STD_LOGIC;
+           data_clock : in STD_LOGIC;
            timer_clock : in STD_LOGIC; -- Fast clock to run timer
            master_enable: in STD_LOGIC; -- enable input from GPIO
            mast_limit : in STD_LOGIC; -- mast limit switch input from GPIO
            x_channel, y_channel : in STD_LOGIC_VECTOR(15 downto 0); -- filtered x and y angles
-           mast_extend: out STD_LOGIC); -- mast extend output for GPIO
+           mast_zeroed : out STD_LOGIC;
+           mast_extend : out STD_LOGIC); -- mast extend output for GPIO
 end mac_controller;
 
 architecture Behavioral of mac_controller is
@@ -60,8 +62,8 @@ begin
     -- synchronus comparators:
     -- x_comp_wire and y_comp_wire are '1' when
     -- the corresponding input is < 0.5 degrees (0b'7 in fixed point)
-    s_comparator : process (clk) begin
-        if (RISING_EDGE(clk)) then
+    s_comparator : process (data_clock) begin
+        if (RISING_EDGE(data_clock)) then
             if (int_x_channel < comp_val and int_x_channel > -comp_val) then
                 x_comp_wire <= '1';
             else
@@ -81,11 +83,13 @@ begin
     
     -- set timer_clock to 256 Hz to maxout the 8-bit timer in 1 sec
     timer : entity work.maxout_timer
-    port map (clk => timer_clock,
+    port map (sys_clk => clk,
+              inc_clk => timer_clock,
               en => timer_enable,
               rst => timer_reset,
               max => timer_max);
                                                
+    mast_zeroed <= timer_enable;
     mast_extend <= master_enable and timer_max and not mast_limit;
 
 end Behavioral;

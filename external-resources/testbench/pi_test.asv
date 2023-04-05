@@ -60,21 +60,21 @@ stepout = zeros(size(steptime));
 stepin(1:100) = 15;
 
 stepvolt(1:101) = y(1);
-stepvolt(102:2000) = y(2:1900);
+stepvolt(102:2000) = y(2:1)
 
 stepout(1:101) = 15;
 stepout(102:2000) = x(2:1900);
 
 figure();
-plot(steptime, stepout, 'LineWidth', 2);
+plot(steptime, stepin);
 hold on;
-plot(steptime, stepvolt, 'LineWidth', 2);
+plot(steptime, y);
 hold off;
 hold on;
-plot(steptime, stepin, 'LineWidth', 2);
+plot(steptime, stepout);
 hold off;
 title('PI Controller Response');
-legend('Gimbal Angle Response', 'PI Voltage Output', 'Target Angle');
+legend('Target Angle', 'Gimbal Angle Response', '');
 xlabel('Time (s)');
 ylabel('Amplitude');
 

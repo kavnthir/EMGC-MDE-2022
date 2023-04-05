@@ -38,7 +38,8 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity maxout_timer is
     Generic ( bitsize : integer := 8);
-    Port ( clk : in STD_LOGIC;
+    Port ( sys_clk : in STD_LOGIC;
+           inc_clk : in STD_LOGIC;
            en : in STD_LOGIC;
            rst : in STD_LOGIC;
            max : out STD_LOGIC);
@@ -49,12 +50,19 @@ architecture Behavioral of maxout_timer is
     
 begin
     
-    -- synchronus timer, synchronus reset
-    process (clk) begin
-        if (RISING_EDGE(clk)) then
+    -- synchronus reset
+    reset : process (sys_clk) begin
+        if (RISING_EDGE(sys_clk)) then
             if (rst = '1') then
                 count <= (others => '0');
-            elsif (en = '1' and count /= 2**bitsize-1) then
+            end if;
+        end if;
+    end process;
+    
+    -- synchronus timer
+    timer : process (inc_clk) begin
+        if (RISING_EDGE(inc_clk)) then
+            if (en = '1' and count /= 2**bitsize-1) then
                 count <= count + 1;
             end if;
         end if;
