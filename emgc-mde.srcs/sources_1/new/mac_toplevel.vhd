@@ -80,13 +80,13 @@ begin
 --CLOCK DIV------------------------------------------------------
     clk_div_100 : entity work.clk_div 
     generic map (in_Hz => 100_000_000,
-                 out_Hz => 10000)
+                 out_Hz => 100)
     port map (rst => reset,
               clk_in => clk_100M,
               clk_out => clk_100);
     clk_div_timer : entity work.clk_div
     generic map (in_Hz => 100_000_000,
-                 out_Hz => 25600)
+                 out_Hz => 128)
     port map (rst => reset,
               clk_in => clk_100M,
               clk_out => clk_timer);
