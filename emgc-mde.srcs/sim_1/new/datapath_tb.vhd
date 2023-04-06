@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
+-- Company: Virginia Tech ECE - EMGC Team
+-- Engineer: Kaden Marlin
 -- 
 -- Create Date: 03/29/2023 03:17:40 PM
 -- Design Name: 
@@ -65,7 +65,7 @@ begin
 
     clk_div_timer : entity work.clk_div
     generic map (in_Hz => 100_000_000,
-                 out_Hz => 25600)
+                 out_Hz => 12800)
     port map (rst => reset,
               clk_in => clk_100M,
               clk_out => clk_timer);
@@ -128,17 +128,17 @@ begin
         file_open(input_file, "pi_test_in.txt", read_mode);
         file_open(output_file, "pi_test_out.txt", write_mode);
    
-        wait until RISING_EDGE(clk_100M); -- reset pulse
+        wait until RISING_EDGE(clk_100M);
         reset <= '1';
-        wait until RISING_EDGE(clk_100M); -- reset pulse
+        wait for 200 us; -- reset pulse
         reset <= '0';
-        wait until RISING_EDGE(clk_100); -- reset pulse
+        wait until RISING_EDGE(clk_100);
         
         while not endfile(input_file) loop
             readline(input_file, in_line);
             read(in_line, in_val);
-            pitch_angle_lpf <= in_val;
-            roll_angle_lpf <= in_val;
+            pitch_angle <= in_val;
+            roll_angle <= (others => '0');
             wait until RISING_EDGE(clk_100);
         end loop;
     

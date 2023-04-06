@@ -1,5 +1,5 @@
 ----------------------------------------------------------------------------------
--- Company: 
+-- Company: Virginia Tech ECE - EMGC Team
 -- Engineer: Kaden Marlin, Kavin Thirukonda
 -- 
 -- Create Date: 11/04/2022 11:20:53 PM
@@ -18,7 +18,6 @@
 -- Additional Comments:
 -- 
 ----------------------------------------------------------------------------------
-
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;

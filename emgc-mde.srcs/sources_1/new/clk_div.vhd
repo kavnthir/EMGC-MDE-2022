@@ -49,12 +49,13 @@ architecture Behavioral of clk_div is
     signal div_clk : STD_LOGIC;
 begin
 
-    process (clk_in) begin
-        if (RISING_EDGE(clk_in)) then
-            if (rst = '1') then
-                count <= (others => '0');
-                div_clk <= '1';
-            elsif (count = count_max) then
+    -- Clock div counter
+    process (clk_in, rst) begin
+        if (RISING_EDGE(rst)) then
+            count <= (others => '0');
+            div_clk <= '1';
+        elsif (RISING_EDGE(clk_in)) then
+            if (count = count_max) then
                 count <= (others => '0');
                 div_clk <= not div_clk;
             else

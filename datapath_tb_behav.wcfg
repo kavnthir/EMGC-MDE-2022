@@ -10,13 +10,13 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="13.971991666 ms"></ZoomStartTime>
-      <ZoomEndTime time="129.571991667 ms"></ZoomEndTime>
-      <Cursor1Time time="110.305325000 ms"></Cursor1Time>
+      <ZoomStartTime time="0.000000000 ms"></ZoomStartTime>
+      <ZoomEndTime time="380.439119806 ms"></ZoomEndTime>
+      <Cursor1Time time="171.770171150 ms"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="176"></NameColumnWidth>
-      <ValueColumnWidth column_width="74"></ValueColumnWidth>
+      <NameColumnWidth column_width="158"></NameColumnWidth>
+      <ValueColumnWidth column_width="72"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="15" />
    <wvobject fp_name="/datapath_tb/clk_100M" type="logic">
@@ -43,52 +43,55 @@
       <obj_property name="ElementShortName">limit</obj_property>
       <obj_property name="ObjectShortName">limit</obj_property>
    </wvobject>
+   <wvobject fp_name="/datapath_tb/zeroed" type="logic">
+      <obj_property name="ElementShortName">zeroed</obj_property>
+      <obj_property name="ObjectShortName">zeroed</obj_property>
+   </wvobject>
    <wvobject fp_name="/datapath_tb/extend" type="logic">
       <obj_property name="ElementShortName">extend</obj_property>
       <obj_property name="ObjectShortName">extend</obj_property>
    </wvobject>
-   <wvobject fp_name="/datapath_tb/angle_lpf" type="array">
-      <obj_property name="ElementShortName">angle_lpf[15:0]</obj_property>
-      <obj_property name="ObjectShortName">angle_lpf[15:0]</obj_property>
+   <wvobject fp_name="/datapath_tb/stability_control/timer/count" type="array">
+      <obj_property name="ElementShortName">count[7:0]</obj_property>
+      <obj_property name="ObjectShortName">count[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/datapath_tb/pitch_angle" type="array">
+      <obj_property name="ElementShortName">pitch_angle[15:0]</obj_property>
+      <obj_property name="ObjectShortName">pitch_angle[15:0]</obj_property>
+      <obj_property name="WaveformStyle">STYLE_ANALOG</obj_property>
+      <obj_property name="CellHeight">100</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/datapath_tb/roll_angle" type="array">
+      <obj_property name="ElementShortName">roll_angle[15:0]</obj_property>
+      <obj_property name="ObjectShortName">roll_angle[15:0]</obj_property>
       <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
       <obj_property name="WaveformStyle">STYLE_ANALOG</obj_property>
       <obj_property name="CellHeight">100</obj_property>
    </wvobject>
-   <wvobject fp_name="/datapath_tb/volts" type="array">
-      <obj_property name="ElementShortName">volts[7:0]</obj_property>
-      <obj_property name="ObjectShortName">volts[7:0]</obj_property>
+   <wvobject fp_name="/datapath_tb/pitch_angle_lpf" type="array">
+      <obj_property name="ElementShortName">pitch_angle_lpf[15:0]</obj_property>
+      <obj_property name="ObjectShortName">pitch_angle_lpf[15:0]</obj_property>
+      <obj_property name="WaveformStyle">STYLE_ANALOG</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      <obj_property name="CellHeight">100</obj_property>
+   </wvobject>
+   <wvobject fp_name="/datapath_tb/roll_angle_lpf" type="array">
+      <obj_property name="ElementShortName">roll_angle_lpf[15:0]</obj_property>
+      <obj_property name="ObjectShortName">roll_angle_lpf[15:0]</obj_property>
+      <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/datapath_tb/pitch_volts" type="array">
+      <obj_property name="ElementShortName">pitch_volts[7:0]</obj_property>
+      <obj_property name="ObjectShortName">pitch_volts[7:0]</obj_property>
+      <obj_property name="WaveformStyle">STYLE_ANALOG</obj_property>
+      <obj_property name="CellHeight">100</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      <obj_property name="WaveformStyle">STYLE_ANALOG</obj_property>
-      <obj_property name="CellHeight">100</obj_property>
    </wvobject>
-   <wvobject fp_name="/datapath_tb/PI_controller/input_0" type="array">
-      <obj_property name="ElementShortName">input_0[31:0]</obj_property>
-      <obj_property name="ObjectShortName">input_0[31:0]</obj_property>
-      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/datapath_tb/PI_controller/input_1" type="array">
-      <obj_property name="ElementShortName">input_1[31:0]</obj_property>
-      <obj_property name="ObjectShortName">input_1[31:0]</obj_property>
-      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/datapath_tb/PI_controller/output_1" type="array">
-      <obj_property name="ElementShortName">output_1[63:0]</obj_property>
-      <obj_property name="ObjectShortName">output_1[63:0]</obj_property>
-      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/datapath_tb/PI_controller/output_0" type="array">
-      <obj_property name="ElementShortName">output_0[63:0]</obj_property>
-      <obj_property name="ObjectShortName">output_0[63:0]</obj_property>
-      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/datapath_tb/PI_controller/output_buf0" type="array">
-      <obj_property name="ElementShortName">output_buf0[63:0]</obj_property>
-      <obj_property name="ObjectShortName">output_buf0[63:0]</obj_property>
-      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/datapath_tb/PI_controller/output_buf1" type="array">
-      <obj_property name="ElementShortName">output_buf1[31:0]</obj_property>
-      <obj_property name="ObjectShortName">output_buf1[31:0]</obj_property>
+   <wvobject fp_name="/datapath_tb/roll_volts" type="array">
+      <obj_property name="ElementShortName">roll_volts[7:0]</obj_property>
+      <obj_property name="ObjectShortName">roll_volts[7:0]</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
 </wave_config>

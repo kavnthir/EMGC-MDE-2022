@@ -46,22 +46,20 @@ entity maxout_timer is
 end maxout_timer;
 
 architecture Behavioral of maxout_timer is
-    signal count : UNSIGNED(bitsize-1 downto 0); -- := (others => '0');
+    signal count : UNSIGNED(bitsize-1 downto 0);
     
 begin
     
     -- synchronus reset
     reset : process (sys_clk) begin
-        if (RISING_EDGE(sys_clk)) then
-            if (rst = '1') then
-                count <= (others => '0');
-            end if;
-        end if;
+        
     end process;
     
     -- synchronus timer
-    timer : process (inc_clk) begin
-        if (RISING_EDGE(inc_clk)) then
+    timer : process (sys_clk, inc_clk) begin
+        if (RISING_EDGE(sys_clk) and rst = '1') then
+            count <= (others => '0');
+        elsif (RISING_EDGE(inc_clk)) then
             if (en = '1' and count /= 2**bitsize-1) then
                 count <= count + 1;
             end if;

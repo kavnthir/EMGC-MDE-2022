@@ -142,17 +142,20 @@ ARCHITECTURE rtl OF lowpass IS
   SIGNAL output_typeconvert               : signed(15 DOWNTO 0); -- sfix16
   SIGNAL output_register                  : signed(15 DOWNTO 0); -- sfix16
 
+  SIGNAL input_typeconvert                : signed(15 DOWNTO 0);
 
 BEGIN
+
+  input_typeconvert <= shift_left(signed(input_data), 3);
 
   -- Block Statements
   Delay_Pipeline_process : PROCESS (clk)
   BEGIN
     IF rising_edge(clk) THEN
       IF rst = '1' THEN
-        delay_pipeline(0 TO 10) <= (OTHERS => signed(input_data));
+        delay_pipeline(0 TO 10) <= (OTHERS => input_typeconvert);
       ELSIF en = '1' THEN
-        delay_pipeline(0) <= signed(input_data);
+        delay_pipeline(0) <= input_typeconvert;
         delay_pipeline(1 TO 10) <= delay_pipeline(0 TO 9);
       END IF;
     END IF; 
@@ -309,5 +312,5 @@ BEGIN
   END PROCESS Output_Register_process;
 
   -- Assignment Statements
-  output_data <= std_logic_vector(output_register);
+  output_data <= std_logic_vector(shift_right(output_register, 3));
 END rtl;

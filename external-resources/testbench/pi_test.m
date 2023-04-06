@@ -32,10 +32,10 @@ y = (3 * y) / 16;
 
 % DAC adjustments:
 y = (255 * (y + 160)) / 320;    % convert to 1 byte
-y = (3.3 * double(y)) / 255;    % convert to analog
+%y = (3.3 * double(y)) / 255;    % convert to analog
 
 % AMP adjustment:
-y = 6 * (y - 1.65);             % shift down and amp by 6
+%y = 6 * (y - 1.65);             % shift down and amp by 6
 
 % PLOT
 tend = 2000;
