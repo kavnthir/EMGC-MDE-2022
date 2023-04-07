@@ -32,7 +32,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity gpio_interface is
-    Port ( clk : in STD_LOGIC;
+    Port ( clk, data_clock : in STD_LOGIC;
            reset_in, enable_in, limit_in : in STD_LOGIC;
            reset_out, enable_out, limit_out : out STD_LOGIC);
 end gpio_interface;
@@ -43,13 +43,20 @@ architecture Behavioral of gpio_interface is
     
 begin
 
-    gpio_sync : process (clk) begin
-        reset_sync <= reset_in;
-        enable_sync <= enable_in;
-        limit_sync <= limit_in;
-        reset_out <= reset_sync;
-        enable_out <= enable_sync;
-        limit_out <= limit_sync;
+    process (clk) begin
+        if (RISING_EDGE(clk)) then
+            reset_sync <= reset_in;
+            reset_out <= reset_sync;
+        end if;
+    end process;
+
+    process (data_clock) begin
+        if (RISING_EDGE(clk)) then
+            enable_sync <= enable_in;
+            limit_sync <= limit_in;
+            enable_out <= enable_sync;
+            limit_out <= limit_sync;
+        end if;
     end process;
 
 end Behavioral;

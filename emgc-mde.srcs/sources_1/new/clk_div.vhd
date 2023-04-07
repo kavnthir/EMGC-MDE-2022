@@ -47,15 +47,22 @@ architecture Behavioral of clk_div is
     constant bit_max : integer := integer(ceil(log2(real(count_max))));
     signal count : UNSIGNED(bit_max downto 0);
     signal div_clk : STD_LOGIC;
+    signal rst_reg, rst_pulse : STD_LOGIC;
 begin
 
-    -- Clock div counter
-    process (clk_in, rst) begin
-        if (RISING_EDGE(rst)) then
-            count <= (others => '0');
-            div_clk <= '1';
-        elsif (RISING_EDGE(clk_in)) then
-            if (count = count_max) then
+    rst_pulse <= rst and not rst_reg;
+    pulserst : process (clk_in) begin
+        if (RISING_EDGE(clk_in)) then
+            rst_reg <= rst;
+        end if;
+    end process;
+
+    divider : process (clk_in) begin
+        if (RISING_EDGE(clk_in)) then
+            if (rst_pulse = '1') then
+                count <= (others => '0');
+                div_clk <= '1';
+            elsif (count = count_max) then
                 count <= (others => '0');
                 div_clk <= not div_clk;
             else
