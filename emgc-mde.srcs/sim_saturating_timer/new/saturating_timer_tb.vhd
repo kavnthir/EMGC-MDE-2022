@@ -2,9 +2,9 @@
 -- Company: 
 -- Engineer: 
 -- 
--- Create Date: 02/04/2023 08:21:05 PM
+-- Create Date: 04/07/2023 05:06:02 PM
 -- Design Name: 
--- Module Name: maxout_timer_tb - Behavioral
+-- Module Name: saturating_timer_tb - Behavioral
 -- Project Name: 
 -- Target Devices: 
 -- Tool Versions: 
@@ -24,22 +24,14 @@ use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 use STD.ENV.STOP;
 
+entity saturating_timer_tb is
+end saturating_timer_tb;
 
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
-
--- Uncomment the following library declaration if instantiating
--- any Xilinx leaf cells in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
-
-entity maxout_timer_tb is
-end maxout_timer_tb;
-
-architecture Behavioral of maxout_timer_tb is
+architecture Behavioral of saturating_timer_tb is
+    
     signal clk, en, rst : STD_LOGIC := '0';
     signal max : STD_LOGIC;
+    
 begin
 
     UUT : entity work.maxout_timer port map (clk => clk,
@@ -145,6 +137,6 @@ begin
         wait for 2 ns;
         
         STOP;
-    end process; 
+    end process;
 
 end Behavioral;

@@ -2,9 +2,9 @@
 -- Company: 
 -- Engineer: 
 -- 
--- Create Date: 02/08/2023 12:51:36 AM
+-- Create Date: 04/07/2023 04:49:42 PM
 -- Design Name: 
--- Module Name: mac_controller_tb - Behavioral
+-- Module Name: stability_sensor_tb - Behavioral
 -- Project Name: 
 -- Target Devices: 
 -- Tool Versions: 
@@ -24,19 +24,11 @@ use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 use STD.ENV.STOP;
 
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
+entity stability_sensor_tb is
+end stability_sensor_tb;
 
--- Uncomment the following library declaration if instantiating
--- any Xilinx leaf cells in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
+architecture Behavioral of stability_sensor_tb is
 
-entity mac_controller_tb is
-end mac_controller_tb;
-
-architecture Behavioral of mac_controller_tb is
     signal clk_100M : STD_LOGIC := '0';
     signal clk_100, clk_timer : STD_LOGIC;
     signal reset_in : STD_LOGIC := '0';
@@ -120,5 +112,5 @@ begin
 
         STOP;
     end process;
-
+    
 end Behavioral;

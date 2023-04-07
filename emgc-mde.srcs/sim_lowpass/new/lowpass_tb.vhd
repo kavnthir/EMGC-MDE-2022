@@ -2,9 +2,9 @@
 -- Company: 
 -- Engineer: 
 -- 
--- Create Date: 11/05/2022 01:07:08 AM
+-- Create Date: 04/07/2023 04:57:52 PM
 -- Design Name: 
--- Module Name: dac_interface_tb - Behavioral
+-- Module Name: lowpass_tb - Behavioral
 -- Project Name: 
 -- Target Devices: 
 -- Tool Versions: 
@@ -31,11 +31,11 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity dac_interface_tb is
+entity lowpass_tb is
 --  Port ( );
-end dac_interface_tb;
+end lowpass_tb;
 
-architecture Behavioral of dac_interface_tb is
+architecture Behavioral of lowpass_tb is
 
 begin
 
