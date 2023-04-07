@@ -29,9 +29,9 @@ entity mac_toplevel is
            sw : in STD_LOGIC_VECTOR(3 downto 0);
            led : out STD_LOGIC_VECTOR(3 downto 0);
            -- UART pins
-           uart_rx : in STD_LOGIC;
+           -- ?
            -- DAC Pmod pins
-           ja : inout STD_LOGIC_VECTOR(3 downto 0)
+           ja : inout STD_LOGIC_VECTOR(7 downto 0)
            ); 
 end mac_toplevel;
 
@@ -92,19 +92,15 @@ begin
               
 --I/O CONTROLLERS------------------------------------------------------
     control_sync : entity work.gpio_interface
-    port map (clk => clk_100,
+    port map (clk => clk_100M,
+              data_clock => clk_100,
               reset_in => btn(0),
               enable_in => sw(0),
               limit_in => sw(1),
               reset_out => reset,
               enable_out => enable,
               limit_out => limit);
-    uart_interface : entity work.uart_interface
-    port map (sys_clk => CLK100MHZ,
-              rst => reset,
-              rxd => uart_rx,
-              x_data => pitch_angle,
-              y_data => roll_angle);
+    -- uart_interface :
     dac_interface : entity work.pmod_dac_ad7303
     port map (clk => CLK100MHZ,
               reset_n => '1',
@@ -121,11 +117,9 @@ begin
 
 --STABILITY CONTROLLER------------------------------------------------------
     stability_control : entity work.mac_controller
-    port map (clk => clk_100M,
-              rst => reset,
-              data_clock => clk_100,
+    port map (clk => clk_100,
               timer_clock => clk_timer,
-              master_enable => enable,
+              mast_enable => enable,
               mast_limit => limit,
               x_channel => pitch_angle_lpf,
               y_channel => roll_angle_lpf,
@@ -148,15 +142,13 @@ begin
 
 --PI CONTROLLERS------------------------------------------------------
     pitch_PI_controller : entity work.pi_controller 
-    port map (clk => clk_100M,
+    port map (clk => clk_100,
               rst => reset,
-              data_clock => clk_100,
               input_data => pitch_angle_lpf,
               output_data => pitch_volts);
     roll_PI_controller : entity work.pi_controller 
-    port map (clk => clk_100M,
+    port map (clk => clk_100,
               rst => reset,
-              data_clock => clk_100,
               input_data => roll_angle_lpf,
               output_data => roll_volts);
 

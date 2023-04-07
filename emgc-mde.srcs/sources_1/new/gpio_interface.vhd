@@ -51,7 +51,7 @@ begin
     end process;
 
     process (data_clock) begin
-        if (RISING_EDGE(clk)) then
+        if (RISING_EDGE(data_clock)) then
             enable_sync <= enable_in;
             limit_sync <= limit_in;
             enable_out <= enable_sync;

@@ -35,9 +35,13 @@ architecture Behavioral of datapath_tb is
     signal clk_100, clk_timer : STD_LOGIC;
     
 --CONTROL SIGNALS------------------------------------------------------
-    signal reset : STD_LOGIC := '0';
-    signal enable : STD_LOGIC := '1';
-    signal limit : STD_LOGIC := '0';
+    signal reset_in : STD_LOGIC := '0';
+    signal enable_in : STD_LOGIC := '1';
+    signal limit_in : STD_LOGIC := '0';
+
+    signal reset : STD_LOGIC;
+    signal enable : STD_LOGIC;
+    signal limit : STD_LOGIC;
     
  --STATUS SIGNALS------------------------------------------------------
     signal zeroed : STD_LOGIC;
@@ -70,13 +74,22 @@ begin
               clk_in => clk_100M,
               clk_out => clk_timer);
 
+--I/O CONTROLLERS------------------------------------------------------
+    control_sync : entity work.gpio_interface
+    port map (clk => clk_100M,
+              data_clock => clk_100,
+              reset_in => reset_in,
+              enable_in => enable_in,
+              limit_in => limit_in,
+              reset_out => reset,
+              enable_out => enable,
+              limit_out => limit);
+
 --STABILITY CONTROLLER------------------------------------------------------
     stability_control : entity work.mac_controller
-    port map (clk => clk_100M,
-              rst => reset,
-              data_clock => clk_100,
+    port map (clk => clk_100,
               timer_clock => clk_timer,
-              master_enable => enable,
+              mast_enable => enable,
               mast_limit => limit,
               x_channel => pitch_angle_lpf,
               y_channel => roll_angle_lpf,
@@ -99,15 +112,13 @@ begin
 
 --PI CONTROLLERS------------------------------------------------------
     pitch_PI_controller : entity work.pi_controller 
-    port map (clk => clk_100M,
+    port map (clk => clk_100,
               rst => reset,
-              data_clock => clk_100,
               input_data => pitch_angle_lpf,
               output_data => pitch_volts);
     roll_PI_controller : entity work.pi_controller 
-    port map (clk => clk_100M,
+    port map (clk => clk_100,
               rst => reset,
-              data_clock => clk_100,
               input_data => roll_angle_lpf,
               output_data => roll_volts);
               
@@ -128,10 +139,17 @@ begin
         file_open(input_file, "pi_test_in.txt", read_mode);
         file_open(output_file, "pi_test_out.txt", write_mode);
    
-        wait until RISING_EDGE(clk_100M);
-        reset <= '1';
-        wait for 200 us; -- reset pulse
-        reset <= '0';
+        -- reset clock dividers
+        wait for 123 ns;
+        reset_in <= '1';
+        wait until RISING_EDGE(clk_100);
+        wait until RISING_EDGE(clk_100);
+        wait until RISING_EDGE(clk_100);
+        reset_in <= '0';
+
+        wait until RISING_EDGE(clk_100);
+        wait until RISING_EDGE(clk_100);
+        wait until RISING_EDGE(clk_100);
         wait until RISING_EDGE(clk_100);
         
         while not endfile(input_file) loop

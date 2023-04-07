@@ -38,10 +38,8 @@ use IEEE.NUMERIC_STD.ALL;
 entity mac_controller is
     Generic ( bit_precision : integer := 3); -- comparator precision
     Port ( clk : in STD_LOGIC;
-           rst : in STD_LOGIC;
-           data_clock : in STD_LOGIC;
            timer_clock : in STD_LOGIC; -- Fast clock to run timer
-           master_enable: in STD_LOGIC; -- enable input from GPIO
+           mast_enable: in STD_LOGIC; -- enable input from GPIO
            mast_limit : in STD_LOGIC; -- mast limit switch input from GPIO
            x_channel, y_channel : in STD_LOGIC_VECTOR(15 downto 0); -- filtered x and y angles
            mast_zeroed : out STD_LOGIC;
@@ -51,8 +49,9 @@ end mac_controller;
 architecture Behavioral of mac_controller is
     constant comp_val : integer := 2**bit_precision; 
     signal int_x_channel, int_y_channel : integer;
-    signal x_comp_wire, y_comp_wire : STD_LOGIC := '0';
-    signal timer_enable, timer_reset, timer_max : STD_LOGIC := '0';
+    signal x_comp_wire, y_comp_wire : STD_LOGIC;
+    signal timer_enable, timer_reset, timer_max : STD_LOGIC;
+    signal mast_extend_sync : STD_LOGIC;
 begin
 
     -- concurrent assign to signed integer
@@ -62,8 +61,8 @@ begin
     -- synchronus comparators:
     -- x_comp_wire and y_comp_wire are '1' when
     -- the corresponding input is < 0.5 degrees (0b'7 in fixed point)
-    s_comparator : process (data_clock) begin
-        if (RISING_EDGE(data_clock)) then
+    s_comparator : process (clk) begin
+        if (RISING_EDGE(clk)) then
             if (int_x_channel < comp_val and int_x_channel > -comp_val) then
                 x_comp_wire <= '1';
             else
@@ -78,18 +77,22 @@ begin
         end if;
     end process;        
     
-    timer_enable <= master_enable and x_comp_wire and y_comp_wire;
+    timer_enable <= mast_enable and x_comp_wire and y_comp_wire;
     timer_reset <= not timer_enable;
     
     -- set timer_clock to 256 Hz to maxout the 8-bit timer in 1 sec
     timer : entity work.maxout_timer
-    port map (sys_clk => clk,
-              inc_clk => timer_clock,
+    port map (clk => timer_clock,
               en => timer_enable,
               rst => timer_reset,
               max => timer_max);
-                                               
+    
     mast_zeroed <= timer_enable;
-    mast_extend <= master_enable and timer_max and not mast_limit;
+    output_sync : process (clk) begin
+        if (RISING_EDGE(clk)) then                                     
+            mast_extend_sync <= mast_enable and timer_max and not mast_limit;
+            mast_extend <= mast_extend_sync;
+        end if;
+    end process;
 
 end Behavioral;
