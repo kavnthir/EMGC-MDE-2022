@@ -29,9 +29,9 @@ entity mac_toplevel is
            sw : in STD_LOGIC_VECTOR(3 downto 0);
            led : out STD_LOGIC_VECTOR(3 downto 0);
            -- UART pins
-           -- ?
+           uart_rx : in STD_LOGIC;
            -- DAC Pmod pins
-           ja : inout STD_LOGIC_VECTOR(7 downto 0)
+           ja : inout STD_LOGIC_VECTOR(3 downto 0)
            ); 
 end mac_toplevel;
 
@@ -55,7 +55,6 @@ architecture Behavioral of mac_toplevel is
     signal pitch_volts, roll_volts : STD_LOGIC_VECTOR(7 downto 0);
     
 --UART SIGNALS------------------------------------------------------
-    --?
     
 --DAC SIGNALS------------------------------------------------------
     signal dac_busy : STD_LOGIC;
@@ -100,9 +99,14 @@ begin
               reset_out => reset,
               enable_out => enable,
               limit_out => limit);
-    -- uart_interface :
+    uart_interface : entity work.uart_interface
+    port map (sys_clk => clk_100M,
+              rst => reset,
+              rxd => uart_rx,
+              x_data => pitch_angle,
+              y_data => roll_angle);
     dac_interface : entity work.pmod_dac_ad7303
-    port map (clk => CLK100MHZ,
+    port map (clk => clk_100M,
               reset_n => '1',
               dac_tx_ena => '1',
               dac_1_ctrl => "110000",
