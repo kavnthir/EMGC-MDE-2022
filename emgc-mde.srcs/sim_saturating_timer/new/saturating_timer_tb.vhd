@@ -34,10 +34,11 @@ architecture Behavioral of saturating_timer_tb is
     
 begin
 
-    UUT : entity work.maxout_timer port map (clk => clk,
-                                             en => en,
-                                             rst => rst,
-                                             max => max);
+    UUT : entity work.saturating_timer
+    port map (clk => clk,
+              en => en,
+              rst => rst,
+              max => max);
     
     -- clock frequecy of 2 Hz                                         
     clk <= not clk after 1 ns;

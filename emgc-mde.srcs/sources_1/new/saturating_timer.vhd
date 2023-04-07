@@ -4,7 +4,7 @@
 -- 
 -- Create Date: 01/23/2023 02:57:53 PM
 -- Design Name: Max-out Timer
--- Module Name: maxout_timer - Behavioral
+-- Module Name: stability_sensor - Behavioral
 -- Project Name: EMGC
 -- Target Devices: -
 -- Tool Versions: -
@@ -36,15 +36,15 @@ use IEEE.NUMERIC_STD.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity maxout_timer is
+entity saturating_timer is
     Generic ( bitsize : integer := 8);
     Port ( clk : in STD_LOGIC;
            en : in STD_LOGIC;
            rst : in STD_LOGIC;
            max : out STD_LOGIC);
-end maxout_timer;
+end saturating_timer;
 
-architecture Behavioral of maxout_timer is
+architecture Behavioral of saturating_timer is
     signal count : UNSIGNED(bitsize-1 downto 0);
     
 begin

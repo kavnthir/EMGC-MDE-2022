@@ -4,14 +4,14 @@
 -- 
 -- Create Date: 01/23/2023 01:30:57 PM
 -- Design Name: MAC Control Module
--- Module Name: mac_controller - Behavioral
+-- Module Name: stability_sensor - Behavioral
 -- Project Name: EMGC
 -- Target Devices: -
 -- Tool Versions: -
 -- Description: Main control logic for the MAC. Senses when the angle error
 --              signal has stabilized around zero, and signals mast extension.
 -- 
--- Dependencies: maxout_timer.vhd
+-- Dependencies: 
 -- 
 -- Revision: 1.0
 -- Revision 0.01 - File Created
@@ -35,7 +35,7 @@ use IEEE.NUMERIC_STD.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity mac_controller is
+entity stability_sensor is
     Generic ( bit_precision : integer := 3); -- comparator precision
     Port ( clk : in STD_LOGIC;
            timer_clock : in STD_LOGIC; -- Fast clock to run timer
@@ -44,9 +44,9 @@ entity mac_controller is
            x_channel, y_channel : in STD_LOGIC_VECTOR(15 downto 0); -- filtered x and y angles
            mast_zeroed : out STD_LOGIC;
            mast_extend : out STD_LOGIC); -- mast extend output for GPIO
-end mac_controller;
+end stability_sensor;
 
-architecture Behavioral of mac_controller is
+architecture Behavioral of stability_sensor is
     constant comp_val : integer := 2**bit_precision; 
     signal int_x_channel, int_y_channel : integer;
     signal x_comp_wire, y_comp_wire : STD_LOGIC;
@@ -81,7 +81,7 @@ begin
     timer_reset <= not timer_enable;
     
     -- set timer_clock to 256 Hz to maxout the 8-bit timer in 1 sec
-    timer : entity work.maxout_timer
+    timer : entity work.saturating_timer
     port map (clk => timer_clock,
               en => timer_enable,
               rst => timer_reset,

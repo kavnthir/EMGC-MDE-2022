@@ -64,7 +64,7 @@ begin
               clk_in => clk_100M,
               clk_out => clk_timer);
               
-    UUT : entity work.mac_controller
+    UUT : entity work.stability_sensor
     port map (clk => clk_100,
               timer_clock => clk_timer,
               mast_enable => mast_enable,

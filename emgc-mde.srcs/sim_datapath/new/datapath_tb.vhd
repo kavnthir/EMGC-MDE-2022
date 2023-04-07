@@ -87,7 +87,7 @@ begin
               limit_out => limit);
 
 --STABILITY CONTROLLER------------------------------------------------------
-    stability_control : entity work.mac_controller
+    stability_module : entity work.stability_sensor
     port map (clk => clk_100,
               timer_clock => clk_timer,
               mast_enable => enable,
