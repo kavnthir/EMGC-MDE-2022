@@ -1,22 +1,21 @@
 ----------------------------------------------------------------------------------
--- Company: 
+-- Company: Virginia Tech ECE Department
 -- Engineer: Kaden Marlin, Kavin Thirukonda
 -- 
 -- Create Date: 11/04/2022 11:14:57 PM
--- Design Name: 
+-- Design Name: Pipelined Proportional-Integral (PI) Controller
 -- Module Name: pi_controller - Behavioral
--- Project Name: 
--- Target Devices: 
--- Tool Versions: 
--- Description: 
+-- Project Name: Extendable Mast Gimbal Controller (EMGC)
+-- Target Devices: Arty A7 FPGA (xc7a100tcsg324-1)
+-- Tool Versions: Xilinx Vivado
+-- Description: A digital PI controler/compensator implemented using
+--              a pipelined architecture. Additional output arithmetic
+--              is implemented to rescale the output to an unsigned byte.
 -- 
--- Dependencies: 
--- 
--- Revision:
--- Revision 0.01 - File Created
--- Additional Comments:
+-- Dependencies: None
 -- 
 ----------------------------------------------------------------------------------
+
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
@@ -27,10 +26,10 @@ entity pi_controller is
     Generic ( Kp : real := 2.0;     -- P unit constant
               Ki : real := 0.125;   -- I unit constant
               Ts : real := 0.01;    -- Sample period
-              Sh : integer := 17);  -- Shift amount (for small numbers)
+              Sh : integer := 17);  -- Shift amount (for integer arithmetic)
     Port ( clk : in STD_LOGIC;
            rst : in STD_LOGIC;
-           input_data : in STD_LOGIC_VECTOR(15 downto 0); -- input range -15 to +15
+           input_data : in STD_LOGIC_VECTOR(15 downto 0); -- input range -15 to +15 signed
            output_data : out STD_LOGIC_VECTOR(7 downto 0)); -- output range -10 to +10 signed
 end pi_controller;
 
@@ -54,9 +53,9 @@ architecture Behavioral of pi_controller is
     -- Output arithmetic buffer values
     signal output_denom : SIGNED(31 downto 0);
     signal output_gain : SIGNED(31 downto 0);
-    signal output_shift : SIGNED(31 downto 0);
-    
+    signal output_shift : SIGNED(31 downto 0);   
 begin
+
     -- data typeconverts
     input_0 <= resize(SIGNED(input_data), 32);
     output_data <= STD_LOGIC_VECTOR(output_shift(7 downto 0));

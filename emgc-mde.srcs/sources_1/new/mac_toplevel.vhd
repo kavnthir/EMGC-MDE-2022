@@ -6,13 +6,14 @@
 -- Design Name: Mast Assemby Controller (MAC)
 -- Module Name: mac_toplevel - Behavioral
 -- Project Name: Extendable Mast Gimbal Controller (EMGC)
--- Target Devices: Arty A7 FPGA
--- Tool Versions: Vivado
--- Description: 
+-- Target Devices: Arty A7 FPGA (xc7a100tcsg324-1)
+-- Tool Versions: Xilinx Vivado
+-- Description: MAC toplevel module. Connects the below
+--              modules for synthesis with Arty A7 FPGA.
 -- 
--- Dependencies: 
--- 
--- Additional Comments:
+-- Dependencies: clk_div, gpio_interface, stability_sensor, 
+--               lowpass, pi_controller, uart_interface,
+--               pmod_dac_ad7303
 -- 
 ----------------------------------------------------------------------------------
 

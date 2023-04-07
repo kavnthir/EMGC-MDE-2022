@@ -1,20 +1,17 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
+-- Company: Virginia Tech ECE Department
+-- Engineer: Kaden Marlin
 -- 
 -- Create Date: 04/07/2023 04:49:42 PM
--- Design Name: 
--- Module Name: stability_sensor_tb - Behavioral
--- Project Name: 
--- Target Devices: 
--- Tool Versions: 
--- Description: 
+-- Design Name: Stability Sensor Testbench
+-- Module Name: stability_sensor_tb - Simulation
+-- Project Name: Extendable Mast Gimbal Controller (EMGC)
+-- Target Devices: Vivado Simulator
+-- Tool Versions: Xilinx Vivado
+-- Description: Verifies functionality of stability sensor and
+--              clock dividers with test input and reset pulse.
 -- 
--- Dependencies: 
--- 
--- Revision:
--- Revision 0.01 - File Created
--- Additional Comments:
+-- Dependencies: stability_sensor, saturating_timer, clk_div
 -- 
 ----------------------------------------------------------------------------------
 
@@ -27,7 +24,7 @@ use STD.ENV.STOP;
 entity stability_sensor_tb is
 end stability_sensor_tb;
 
-architecture Behavioral of stability_sensor_tb is
+architecture Simulation of stability_sensor_tb is
 
     signal clk_100M : STD_LOGIC := '0';
     signal clk_100, clk_timer : STD_LOGIC;
@@ -113,4 +110,4 @@ begin
         STOP;
     end process;
     
-end Behavioral;
+end Simulation;

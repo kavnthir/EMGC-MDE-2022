@@ -1,20 +1,18 @@
 ----------------------------------------------------------------------------------
--- Company: Virginia Tech ECE - EMGC Team
+-- Company: Virginia Tech ECE Department
 -- Engineer: Kaden Marlin
 -- 
 -- Create Date: 03/29/2023 03:17:40 PM
--- Design Name: 
--- Module Name: datapath_tb - Behavioral
--- Project Name: 
--- Target Devices: 
--- Tool Versions: 
--- Description: 
+-- Design Name: Full Datapath Testbench
+-- Module Name: datapath_tb - Simulation
+-- Project Name: Extendable Mast Gimbal Controller (EMGC)
+-- Target Devices: Vivado Simulator
+-- Tool Versions: Xilinx Vivado
+-- Description: Verifies full datapath functionality with an input file.
+--              All modules except I/O are simulated here.
 -- 
--- Dependencies: 
--- 
--- Revision:
--- Revision 0.01 - File Created
--- Additional Comments:
+-- Dependencies: clk_div, gpio_interface, stability_sensor,
+--               saturating_timer, pi_controller, lowpass
 -- 
 ----------------------------------------------------------------------------------
 
@@ -29,7 +27,7 @@ use STD.ENV.STOP;
 entity datapath_tb is
 end datapath_tb;
 
-architecture Behavioral of datapath_tb is
+architecture Simulation of datapath_tb is
 
 --CLOCKS------------------------------------------------------
     signal clk_100M : STD_LOGIC := '0';
@@ -164,4 +162,4 @@ begin
         STOP;
     end process;
 
-end Behavioral;
+end Simulation;

@@ -1,16 +1,17 @@
 ----------------------------------------------------------------------------------
--- Company: 
+-- Company: Virginia Tech ECE Department
 -- Engineer: Kaden Marlin
 -- 
 -- Create Date: 11/05/2022 06:02:21 PM
--- Design Name: 
--- Module Name: clk_div_tb - Behavioral
--- Project Name: 
--- Target Devices: 
--- Tool Versions: 
--- Description: 
+-- Design Name: Clock Divider Testbench
+-- Module Name: clk_div_tb - Simulation
+-- Project Name: Extendable Mast Gimbal Controller (EMGC)
+-- Target Devices: Vivado Simulator
+-- Tool Versions: Xilinx Vivado
+-- Description: Verifies correct functionality of the clock
+--              divider module and its reset monostable pulse.
 -- 
--- Additional Comments:
+-- Dependencies: clk_div
 -- 
 ----------------------------------------------------------------------------------
 
@@ -22,7 +23,7 @@ use STD.ENV.STOP;
 entity clk_div_tb is
 end clk_div_tb;
 
-architecture Behavioral of clk_div_tb is
+architecture Simulation of clk_div_tb is
     signal clk, reset_in : STD_LOGIC := '0';
     signal clk_100 : STD_LOGIC;
     
@@ -50,8 +51,9 @@ begin
         reset_in <= '1';
         wait for 14583 ns;
         reset_in <= '0';
+        
         wait for 10000000 ns;
         STOP;
     end process;
     
-end Behavioral;
+end Simulation;

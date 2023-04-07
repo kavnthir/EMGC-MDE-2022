@@ -1,20 +1,19 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
+-- Company: Virginia Tech ECE Department
+-- Engineer: Kaden Marlin
 -- 
 -- Create Date: 02/23/2023 05:49:14 PM
--- Design Name: 
+-- Design Name: Generic Clock Divider
 -- Module Name: clk_div - Behavioral
--- Project Name: 
--- Target Devices: 
--- Tool Versions: 
--- Description: 
+-- Project Name: Extendable Mast Gimbal Controller (EMGC)
+-- Target Devices: Arty A7 FPGA (xc7a100tcsg324-1)
+-- Tool Versions: Xilinx Vivado
+-- Description: A Generic clock divider module that takes
+--              input frequency and output frequency in Hz
+--              and computes the necessary math to produce
+--              the desired clock frequency.
 -- 
--- Dependencies: 
--- 
--- Revision:
--- Revision 0.01 - File Created
--- Additional Comments:
+-- Dependencies: None
 -- 
 ----------------------------------------------------------------------------------
 
@@ -23,16 +22,6 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 use IEEE.MATH_REAL.ALL;
-
-
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
-
--- Uncomment the following library declaration if instantiating
--- any Xilinx leaf cells in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
 
 entity clk_div is 
     Generic ( in_Hz : integer;

@@ -1,24 +1,18 @@
 ----------------------------------------------------------------------------------
--- Company: Virginia Tech
+-- Company: Virginia Tech ECE Department
 -- Engineer: Kaden Marlin
 -- 
 -- Create Date: 01/23/2023 02:57:53 PM
--- Design Name: Max-out Timer
--- Module Name: stability_sensor - Behavioral
--- Project Name: EMGC
--- Target Devices: -
--- Tool Versions: -
--- Description: 
--- clock automatically ticks up its value when enabled
--- stops counting and outputs HIGH on "max" when
--- it reaches its maximum value
--- resets to zero when rst is set HIGH
+-- Design Name: Saturating Timer Module
+-- Module Name: saturating_timer - Behavioral
+-- Project Name: Extendable Mast Gimbal Controller (EMGC)
+-- Target Devices: Arty A7 FPGA (xc7a100tcsg324-1)
+-- Tool Versions: Xilinx Vivado
+-- Description: A standard saturating timer, which will count
+--              up when enabled and output a single bit when its
+--              maximum has been reached, rather than rolling over.
 -- 
--- Dependencies: -
--- 
--- Revision: 1.0
--- Revision 0.01 - File Created
--- Additional Comments:
+-- Dependencies: None
 -- 
 ----------------------------------------------------------------------------------
 
@@ -26,15 +20,6 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
-
-
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
-
--- Uncomment the following library declaration if instantiating
--- any Xilinx leaf cells in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
 
 entity saturating_timer is
     Generic ( bitsize : integer := 8);
@@ -46,7 +31,6 @@ end saturating_timer;
 
 architecture Behavioral of saturating_timer is
     signal count : UNSIGNED(bitsize-1 downto 0);
-    
 begin
 
     timer : process (clk) begin

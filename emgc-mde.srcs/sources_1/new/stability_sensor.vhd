@@ -1,24 +1,19 @@
 ----------------------------------------------------------------------------------
--- Company: Virginia Tech
+-- Company: Virginia Tech ECE Department
 -- Engineer: Kaden Marlin
 -- 
 -- Create Date: 01/23/2023 01:30:57 PM
--- Design Name: MAC Control Module
+-- Design Name: Mast Stability Sensing Comparator Module
 -- Module Name: stability_sensor - Behavioral
--- Project Name: EMGC
--- Target Devices: -
--- Tool Versions: -
--- Description: Main control logic for the MAC. Senses when the angle error
---              signal has stabilized around zero, and signals mast extension.
+-- Project Name: Extendable Mast Gimbal Controller (EMGC)
+-- Target Devices: Arty A7 FPGA (xc7a100tcsg324-1)
+-- Tool Versions: Xilinx Vivado
+-- Description: Produces the Mast EXTEND signal. Senses when the angle error
+--              data signal has come within a small range of zero degrees for
+--              a certain amount of time before signaling for mast extension.
 -- 
--- Dependencies: 
--- 
--- Revision: 1.0
--- Revision 0.01 - File Created
--- Additional Comments: Implements logic according to design diagram,
---                      corrections will likely be necessary.
+-- Dependencies: saturating_timer
 --
--- !!! Currently untested
 ----------------------------------------------------------------------------------
 
 
@@ -26,24 +21,15 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
-
--- Uncomment the following library declaration if instantiating
--- any Xilinx leaf cells in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
-
 entity stability_sensor is
     Generic ( bit_precision : integer := 3); -- comparator precision
     Port ( clk : in STD_LOGIC;
-           timer_clock : in STD_LOGIC; -- Fast clock to run timer
-           mast_enable: in STD_LOGIC; -- enable input from GPIO
-           mast_limit : in STD_LOGIC; -- mast limit switch input from GPIO
-           x_channel, y_channel : in STD_LOGIC_VECTOR(15 downto 0); -- filtered x and y angles
+           timer_clock : in STD_LOGIC;
+           mast_enable: in STD_LOGIC;
+           mast_limit : in STD_LOGIC;
+           x_channel, y_channel : in STD_LOGIC_VECTOR(15 downto 0);
            mast_zeroed : out STD_LOGIC;
-           mast_extend : out STD_LOGIC); -- mast extend output for GPIO
+           mast_extend : out STD_LOGIC);
 end stability_sensor;
 
 architecture Behavioral of stability_sensor is
@@ -80,7 +66,6 @@ begin
     timer_enable <= mast_enable and x_comp_wire and y_comp_wire;
     timer_reset <= not timer_enable;
     
-    -- set timer_clock to 256 Hz to maxout the 8-bit timer in 1 sec
     timer : entity work.saturating_timer
     port map (clk => timer_clock,
               en => timer_enable,

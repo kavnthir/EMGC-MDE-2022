@@ -1,20 +1,17 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
+-- Company: Virginia Tech ECE Department
+-- Engineer: Kaden Marlin
 -- 
 -- Create Date: 04/07/2023 05:06:02 PM
--- Design Name: 
--- Module Name: saturating_timer_tb - Behavioral
--- Project Name: 
--- Target Devices: 
--- Tool Versions: 
--- Description: 
+-- Design Name: Saturating Timer Testbench
+-- Module Name: saturating_timer_tb - Simulation
+-- Project Name: Extendable Mast Gimbal Controller (EMGC)
+-- Target Devices: Vivado Simulator
+-- Tool Versions: Xilinx Vivado
+-- Description: Verifies the simple saturating counter with
+--              with a test controlls and reset/enable switching.
 -- 
--- Dependencies: 
--- 
--- Revision:
--- Revision 0.01 - File Created
--- Additional Comments:
+-- Dependencies: saturating_timer
 -- 
 ----------------------------------------------------------------------------------
 
@@ -27,7 +24,7 @@ use STD.ENV.STOP;
 entity saturating_timer_tb is
 end saturating_timer_tb;
 
-architecture Behavioral of saturating_timer_tb is
+architecture Simulation of saturating_timer_tb is
     
     signal clk, en, rst : STD_LOGIC := '0';
     signal max : STD_LOGIC;
@@ -140,4 +137,4 @@ begin
         STOP;
     end process;
 
-end Behavioral;
+end Simulation;

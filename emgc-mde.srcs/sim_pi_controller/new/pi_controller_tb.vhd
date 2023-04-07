@@ -1,20 +1,17 @@
 ----------------------------------------------------------------------------------
--- Company: 
+-- Company: Virginia Tech ECE Department
 -- Engineer: 
 -- 
 -- Create Date: 01/17/2023 05:05:43 PM
--- Design Name: 
--- Module Name: pi_controller_tb - Behavioral
--- Project Name: 
--- Target Devices: 
--- Tool Versions: 
--- Description: 
+-- Design Name: PI Controller Testbench
+-- Module Name: pi_controller_tb - Simulation
+-- Project Name: Extendable Mast Gimbal Controller (EMGC)
+-- Target Devices: Vivado Simulator
+-- Tool Versions: Xilinx Vivado
+-- Description: Verifies general waveform shape of PI controller
+--              in isolation with an input file.
 -- 
--- Dependencies: 
--- 
--- Revision:
--- Revision 0.01 - File Created
--- Additional Comments:
+-- Dependencies: pi_controller
 -- 
 ----------------------------------------------------------------------------------
 
@@ -28,7 +25,7 @@ use STD.ENV.STOP;
 entity pi_controller_tb is
 end pi_controller_tb;
 
-architecture Behavioral of pi_controller_tb is
+architecture Simulation of pi_controller_tb is
     signal clk : STD_LOGIC := '1';
     signal rst : STD_LOGIC := '0';
     signal input : STD_LOGIC_VECTOR(15 downto 0) := (others => '0');
@@ -74,8 +71,6 @@ begin
         
         wait for 1000 ns;
         STOP;
-    end process;
+    end process; 
     
-    
-    
-end Behavioral;
+end Simulation;
