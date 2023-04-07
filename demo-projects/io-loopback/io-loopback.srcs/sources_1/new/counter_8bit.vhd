@@ -29,13 +29,13 @@ end counter_8bit;
 architecture Behavioral of counter_8bit is
     signal counter : STD_LOGIC_VECTOR(7 downto 0) := (others=>'0');
 begin
-    process(rst,inc,dec) begin
+    process (clk) begin
   
         if (rst = '1') then 
            counter <=  "00000000";
         end if;
         
-        if (clk'event and clk = '1') then
+        if (RISING_EDGE(clk)) then
         
             if (inc = '1') then
                 counter <= counter + '1';

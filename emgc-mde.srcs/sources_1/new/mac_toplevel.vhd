@@ -1,19 +1,16 @@
 ----------------------------------------------------------------------------------
--- Company: Virginia Tech ECE - EMGC Team
+-- Company: Virginia Tech ECE Department
 -- Engineer: Kaden Marlin, Kavin Thirukonda
 -- 
 -- Create Date: 11/04/2022 11:20:53 PM
--- Design Name: 
+-- Design Name: Mast Assemby Controller (MAC)
 -- Module Name: mac_toplevel - Behavioral
--- Project Name: 
--- Target Devices: 
--- Tool Versions: 
+-- Project Name: Extendable Mast Gimbal Controller (EMGC)
+-- Target Devices: Arty A7 FPGA
+-- Tool Versions: Vivado
 -- Description: 
 -- 
--- Dependencies: pi_controller.vhd, 
---               dac_interface.vhd, 
---               rs422_interface.vhd, 
---               sys_clk.vhd
+-- Dependencies: 
 -- 
 -- Additional Comments:
 -- 
