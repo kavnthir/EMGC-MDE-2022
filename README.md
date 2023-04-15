@@ -1,4 +1,4 @@
-# <img src="./images/arty-a7.png" width="10%" height="20%"> NASA(LaRC)/SSAI Extendable Mast Gimbal PI Controller 
+# <img src="./images/nasa-patch.png" style="float: left;" width="20%" height="20%" padding="3px"> NASA(LaRC)/SSAI </br> Extendable Mast Gimbal Controller 
 
 [![VHDL version](https://img.shields.io/badge/VHDL-IEEE%201076--2019-blue)](https://en.wikipedia.org/wiki/VHDL)
 [![Vivado version](https://img.shields.io/badge/Vivado-v2022.2%20(64--bit)-yellow)](https://www.xilinx.com/support/download.html)
