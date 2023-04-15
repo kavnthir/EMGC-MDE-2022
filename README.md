@@ -13,5 +13,5 @@ The FPGA being used to host the hardware model of the PI controller is the Arty 
 
 ## High Level Hardware Design
 
-<img src="./images/high-level.png" width="40%" height="40%">
+<img src="./images/high-level.png" width="80%" height="40%">
 
